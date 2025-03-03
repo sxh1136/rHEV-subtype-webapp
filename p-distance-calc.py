@@ -1,10 +1,10 @@
 import sys
 import json
-from Bio import SeqIO, Align
+import Bio
 
 def calculate_p_distance(seq1, seq2):
     # Create a PairwiseAligner object with appropriate scoring
-    aligner = Align.PairwiseAligner(scoring="blastn")
+    aligner = Bio.Align.PairwiseAligner(scoring="blastn")
     aligner.mode = "global"
 
     # Perform the alignment 
@@ -34,13 +34,13 @@ def calculate_p_distance(seq1, seq2):
 
 def main(input_fasta, reference_fasta):
     try:
-        input_seq = next(SeqIO.parse(input_fasta, "fasta")).seq
-        input_id = next(SeqIO.parse(input_fasta, "fasta")).id  # Get the ID of the input sequence
+        input_seq = next(Bio.SeqIO.parse(input_fasta, "fasta")).seq
+        input_id = next(Bio.SeqIO.parse(input_fasta, "fasta")).id  # Get the ID of the input sequence
         min_distance = float('inf')
         min_id = None
         
         # Read all reference sequences first to determine the total count
-        reference_records = list(SeqIO.parse(reference_fasta, "fasta"))
+        reference_records = list(Bio.SeqIO.parse(reference_fasta, "fasta"))
         total_references = len(reference_records)
         
         # Dictionary to store p-distances for each reference
