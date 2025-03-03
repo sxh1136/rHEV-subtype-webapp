@@ -4,7 +4,7 @@ import sys
 import os
 import json
 import tempfile
-import Bio
+import Biopython as Bio
 import time
 import zipfile
 
