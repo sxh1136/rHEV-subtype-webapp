@@ -4,14 +4,14 @@ import sys
 import os
 import json
 import tempfile
-import Biopython as Bio
+from Bio import SeqIO
 import time
 import zipfile
 
 def extract_fasta_header(input_fasta):
     # Extract the FASTA header name
     with open(input_fasta, 'r') as file:
-        for record in Bio.SeqIO.parse(file, "fasta"):
+        for record in SeqIO.parse(file, "fasta"):
             return record.id
 
 def calculate_p_distance(input_fasta, reference_fasta):
@@ -75,7 +75,7 @@ def main():
         st.write(f"**Query ID:** {query_id}")
         
         with open(temp_fasta_path, 'r') as file:
-            for record in Bio.SeqIO.parse(file, "fasta"):
+            for record in SeqIO.parse(file, "fasta"):
                  st.write(f"**Query Length:** {len(record.seq)}")
                  break
         
