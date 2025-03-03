@@ -5,7 +5,7 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
-  - bioconda::biopython=1.85
+  - conda-forge::biopython=1.84
   - bzip2=1.0.8
   - ca-certificates=2025.1.31
   - gawk=5.3.1
