@@ -1,7 +1,6 @@
 import sys
 import json
-from Bio import SeqIO
-from Bio import Align
+from Bio import SeqIO, Align
 
 def calculate_p_distance(seq1, seq2):
     # Create a PairwiseAligner object with appropriate scoring
