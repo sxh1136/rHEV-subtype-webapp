@@ -17,7 +17,7 @@ def extract_fasta_header(input_fasta):
 def calculate_p_distance(input_fasta, reference_fasta):
     try:
         command = f"python p-distance-calc.py {input_fasta} {reference_fasta}"
-        subprocess.run(command, shell=True, check=True)
+        subprocess.run([f"{sys.executable}",command], shell=True, check=True)
         
         # Read the output from the file
         with open("output/p_distance_output.json", "r") as file:
@@ -32,7 +32,7 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
         output_alignment = os.path.join(output_dir, f"{query_id}_updated.fasta")
         output_tree = os.path.join(output_dir, f"{query_id}_reoptimised")
         command = f"python infer_new_ML_tree.py {existing_alignment} {new_sequence} {existing_tree} {output_alignment} {output_tree}"
-        subprocess.run(command, shell=True, check=True)
+        subprocess.run([f"{sys.executable}",command], shell=True, check=True)
         
         # Read the output from the file
         with open("output/ml_tree_output.json", "r") as file:
@@ -45,7 +45,7 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
 def infer_subtype(input_newick, predefined_label, csv_file):
     try:
         command = f"python ML_patristic-dist_calc.py {input_newick} {predefined_label} {csv_file}"
-        subprocess.run(command, shell=True, check=True)
+        subprocess.run([f"{sys.executable}",command], shell=True, check=True)
         
         # Read the output from the file
         with open("output/subtype_output.json", "r") as file:
