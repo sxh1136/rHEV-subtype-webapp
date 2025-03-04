@@ -12,6 +12,7 @@ def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
             # Run the MAFFT command without shell=True
             result = subprocess.run(mafft_command, check=True, stdout=output_file, stderr=subprocess.PIPE, text=True)
 
+            # Check for errors in the result
             if result.returncode != 0:
                 error_output = result.stderr.strip()
                 print(f"MAFFT Error: MAFFT failed with return code {result.returncode}", file=sys.stderr)
@@ -39,13 +40,14 @@ def run_phylogenetic_placement(output_alignment, existing_tree):
     try:
         result = subprocess.run(iqtree_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
+        # Check for errors in the result
         if result.returncode != 0:
             error_output = result.stderr.strip()
-            print(f"iqtree_command Error: {error_output}", file=sys.stderr)
+            print(f"IQ-TREE Error: {error_output}", file=sys.stderr)
             return {"error": f"Failed to perform phylogenetic placement: {error_output}"}
         return None
     except subprocess.CalledProcessError as e:
-        print(f"iqtree_command Error: {e}", file=sys.stderr)
+        print(f"IQ-TREE Error (CalledProcessError): {e}", file=sys.stderr)
         return {"error": f"Failed to perform phylogenetic placement: {e}"}
 
 def infer_global_optimization_tree(output_alignment, output_tree):
@@ -55,13 +57,14 @@ def infer_global_optimization_tree(output_alignment, output_tree):
     try:
         result = subprocess.run(iqtree_command2, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
+        # Check for errors in the result
         if result.returncode != 0:
             error_output = result.stderr.strip()
-            print(f"iqtree_command2 Error: {error_output}", file=sys.stderr)
+            print(f"IQ-TREE Optimization Error: {error_output}", file=sys.stderr)
             return {"error": f"Failed to infer optimized tree: {error_output}"}
         return None
     except subprocess.CalledProcessError as e:
-        print(f"iqtree_command2 Error: {e}", file=sys.stderr)
+        print(f"IQ-TREE Optimization Error (CalledProcessError): {e}", file=sys.stderr)
         return {"error": f"Failed to infer optimized tree: {e}"}
 
 def main():
@@ -91,7 +94,7 @@ def main():
     if error:
         with open("output/ml_tree_error.json", "w") as file:
             json.dump(error, file)
-        print(f"Error during mafft: {error}", file=sys.stderr)
+        print(f"Error during MAFFT: {error}", file=sys.stderr)
         sys.exit(1)
 
     # Run IQ-TREE phylogenetic placement first
@@ -99,7 +102,7 @@ def main():
     if error:
         with open("output/ml_tree_error.json", "w") as file:
             json.dump(error, file)
-        print(f"Error during iqtree_command: {error}", file=sys.stderr)
+        print(f"Error during run_phylogenetic_placement: {error}", file=sys.stderr)
         sys.exit(1)
 
     # Run IQ-TREE with the constraint tree for optimization
@@ -107,7 +110,7 @@ def main():
     if error:
         with open("output/ml_tree_error.json", "w") as file:
             json.dump(error, file)
-        print(f"Error during iqtree_command2: {error}", file=sys.stderr)
+        print(f"Error during infer_global_optimization_tree: {error}", file=sys.stderr)
         sys.exit(1)
 
     # Prepare output dictionary
