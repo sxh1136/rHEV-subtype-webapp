@@ -57,8 +57,16 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
         # Construct the absolute path to the script
         script_path = os.path.abspath("infer_new_ML_tree.py")
 
+        # Get absolute paths for ALL file arguments
+        existing_alignment_path = os.path.abspath(existing_alignment)
+        new_sequence_path = os.path.abspath(new_sequence)
+        existing_tree_path = os.path.abspath(existing_tree)
+        output_alignment_path = os.path.abspath(output_alignment)
+        output_tree_path = os.path.abspath(output_tree)
+
+
         # Construct the command as a list
-        command = [sys.executable, script_path, existing_alignment, new_sequence, existing_tree, output_alignment, output_tree]
+        command = [sys.executable, script_path, existing_alignment_path, new_sequence_path, existing_tree_path, output_alignment_path, output_tree_path]
 
         # Execute the command
         result = subprocess.run(command, check=True, capture_output=True, text=True)
