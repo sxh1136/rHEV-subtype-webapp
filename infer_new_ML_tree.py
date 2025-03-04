@@ -4,42 +4,41 @@ import json
 import os
 
 def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
+    # Construct the MAFFT command as a list
+    mafft_command = ["mafft", "--thread", "-1", "--quiet", "--add", new_sequence, "--keeplength", existing_alignment]
+    
+    with open(output_alignment, 'w') as output_file:
+        try:
+            # Run the MAFFT command without shell=True
+            result = subprocess.run(mafft_command, check=True, stdout=output_file, stderr=subprocess.PIPE, text=True)
 
-    # Construct the MAFFT command as a string
-    mafft_command = f"mafft --thread -1 --quiet --add {new_sequence} --keeplength {existing_alignment} > {output_alignment}"
+            if result.returncode != 0:
+                error_output = result.stderr.strip()
+                print(f"MAFFT Error: MAFFT failed with return code {result.returncode}", file=sys.stderr)
+                print(f"MAFFT Error (stderr):\n{error_output}", file=sys.stderr)
+                return {"error": f"MAFFT failed with return code {result.returncode}: {error_output}"}
 
-    try:
-        # Run the MAFFT command with shell=True
-        result = subprocess.run(mafft_command, shell=True, check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as e:
+            print(f"MAFFT Error (CalledProcessError): {e}", file=sys.stderr)
+            return {"error": f"MAFFT Error (CalledProcessError): {e}"}
+        except FileNotFoundError as e:
+            print(f"MAFFT Error (FileNotFoundError): {e}", file=sys.stderr)
+            return {"error": f"MAFFT Error (FileNotFoundError): {e}"}
 
-        # Check for errors based on the return code
-        if result.returncode != 0:
-            error_output = result.stderr.strip()
-            print(f"MAFFT Error: MAFFT failed with return code {result.returncode}", file=sys.stderr)
-            print(f"MAFFT Error (stderr):\n{error_output}", file=sys.stderr)  # Print the full stderr
-            return {"error": f"MAFFT failed with return code {result.returncode}: {error_output}"}
+    # Check that the output_alignment was created:
+    if not os.path.exists(output_alignment):
+        print(f"ERROR: add_sequence_to_msa: Output alignment file was not created: {output_alignment}", file=sys.stderr)
+        return {"error": f"add_sequence_to_msa: Output alignment file was not created: {output_alignment}"}
 
-        # Check that the output_alignment was created:
-        if not os.path.exists(output_alignment):
-            print(f"ERROR: add_sequence_to_msa: Output alignment file was not created: {output_alignment}", file=sys.stderr)
-            print(f"MAFFT Output (stdout):\n{result.stdout.strip()}", file=sys.stderr) # Print stdout too
-            return {"error": f"add_sequence_to_msa: Output alignment file was not created: {output_alignment}"}
-
-        return None
-
-    except subprocess.CalledProcessError as e:
-        print(f"MAFFT Error (CalledProcessError): {e}", file=sys.stderr)
-        return {"error": f"MAFFT Error (CalledProcessError): {e}"}
-    except FileNotFoundError as e:
-        print(f"MAFFT Error (FileNotFoundError): {e}", file=sys.stderr)
-        return {"error": f"MAFFT Error (FileNotFoundError): {e}"}
-
+    return None
 
 def run_phylogenetic_placement(output_alignment, existing_tree):
     # Run IQ-TREE with the guide tree
-    iqtree_command = f"iqtree2 -seed 2803 -nt 20 -redo --quiet -s {output_alignment} -g {existing_tree} -pre {output_alignment}_pp -m GTR+F+G4"
+    iqtree_command = ["iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-g", existing_tree, "-pre", f"{output_alignment}_pp", "-m", "GTR+F+G4"]
+    
     try:
-        result = subprocess.run(iqtree_command, shell=True, check=True, capture_output=True, text=True)
+        result = subprocess.run(iqtree_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
         if result.returncode != 0:
             error_output = result.stderr.strip()
             print(f"iqtree_command Error: {error_output}", file=sys.stderr)
@@ -51,9 +50,11 @@ def run_phylogenetic_placement(output_alignment, existing_tree):
 
 def infer_global_optimization_tree(output_alignment, output_tree):
     # Run IQ-TREE with the constraint tree for optimization
-    iqtree_command2 = f"iqtree2 -seed 2803 -nt 20 -redo --quiet -s {output_alignment} -t {output_alignment}_pp.treefile -pre {output_tree} -m GTR+F+G4"
+    iqtree_command2 = ["iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-t", f"{output_alignment}_pp.treefile", "-pre", output_tree, "-m", "GTR+F+G4"]
+    
     try:
-        result = subprocess.run(iqtree_command2, shell=True, check=True, capture_output=True, text=True)
+        result = subprocess.run(iqtree_command2, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
         if result.returncode != 0:
             error_output = result.stderr.strip()
             print(f"iqtree_command2 Error: {error_output}", file=sys.stderr)
