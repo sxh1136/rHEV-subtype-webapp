@@ -18,10 +18,7 @@ def extract_fasta_header(input_fasta):
 
 def calculate_p_distance(input_fasta, reference_fasta):
     try:
-        input_fasta_path = os.path.abspath(input_fasta)
-        reference_fasta_path = os.path.abspath(reference_fasta)
-
-        command = [sys.executable, "p-distance-calc.py", input_fasta_path, reference_fasta_path]
+        command = [sys.executable, "p-distance-calc.py", input_fasta, reference_fasta]
         result = subprocess.run(command, check=True, capture_output=True, text=True)
 
         if result.returncode != 0:
@@ -49,13 +46,7 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
     output_tree = os.path.join(output_dir, f"{query_id}_reoptimised")
     script_path = "infer_new_ML_tree.py"
 
-    existing_alignment_path = os.path.abspath(existing_alignment)
-    new_sequence_path = os.path.abspath(new_sequence)
-    existing_tree_path = os.path.abspath(existing_tree)
-    output_alignment_path = os.path.abspath(output_alignment)
-    output_tree_path = os.path.abspath(output_tree)
-
-    command = [sys.executable, script_path, existing_alignment_path, new_sequence_path, existing_tree_path, output_alignment_path, output_tree_path]
+    command = [sys.executable, script_path, existing_alignment, new_sequence, existing_tree, output_alignment, output_tree]
 
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
@@ -84,10 +75,7 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
         return None, None, None
 
 def infer_subtype(input_newick, predefined_label, csv_file):
-    input_newick_path = os.path.abspath(input_newick)
-    csv_file_path = os.path.abspath(csv_file)
-
-    command = [sys.executable, "ML_patristic-dist_calc.py", input_newick_path, predefined_label, csv_file_path]
+    command = [sys.executable, "ML_patristic-dist_calc.py", input_newick, predefined_label, csv_file]
 
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
