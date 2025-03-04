@@ -9,8 +9,19 @@ import time
 import zipfile
 import shutil
 
+# Debug message to check if script is running
+st.write("Checking for MAFFT installation...")
+
+# Check if MAFFT is available
 if shutil.which("mafft") is None:
     st.error("MAFFT is not installed or not found in PATH. Please install MAFFT to use this functionality.")
+    st.stop()  # Stop execution if MAFFT is not found
+
+# Continue with the rest of the application
+st.write("MAFFT is installed. Proceeding with the application...")
+
+def log_error(message):
+    st.error(message)
 def log_error(message):
     st.error(message)
 
