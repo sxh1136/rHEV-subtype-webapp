@@ -5,7 +5,7 @@ import os
 
 def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
     # Construct the MAFFT command as a list
-    mafft_command = ["mafft-linux64/mafft.bat", "--thread", "-1", "--quiet", "--add", new_sequence, "--keeplength", existing_alignment]
+    mafft_command = ["./mafft-linux64/mafft.bat", "--thread", "-1", "--quiet", "--add", new_sequence, "--keeplength", existing_alignment]
     
     with open(output_alignment, 'w') as output_file:
         try:
@@ -34,7 +34,7 @@ def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
 
 def run_phylogenetic_placement(output_alignment, existing_tree):
     # Run IQ-TREE with the guide tree
-    iqtree_command = ["iqtree-2.4.0/bin/iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-g", existing_tree, "-pre", f"{output_alignment}_pp", "-m", "GTR+F+G4"]
+    iqtree_command = ["./iqtree-2.4.0/bin/iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-g", existing_tree, "-pre", f"{output_alignment}_pp", "-m", "GTR+F+G4"]
     
     try:
         result = subprocess.run(iqtree_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -50,7 +50,7 @@ def run_phylogenetic_placement(output_alignment, existing_tree):
 
 def infer_global_optimization_tree(output_alignment, output_tree):
     # Run IQ-TREE with the constraint tree for optimization
-    iqtree_command2 = ["iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-t", f"{output_alignment}_pp.treefile", "-pre", output_tree, "-m", "GTR+F+G4"]
+    iqtree_command2 = ["./iqtree-2.4.0/bin/iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-t", f"{output_alignment}_pp.treefile", "-pre", output_tree, "-m", "GTR+F+G4"]
     
     try:
         result = subprocess.run(iqtree_command2, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
