@@ -40,7 +40,7 @@ def calculate_p_distance(input_fasta, reference_fasta):
     except subprocess.CalledProcessError as e:
         log_error(f"Subprocess error: {e}")
         return None
-
+    
 def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, output_dir):
     output_alignment = os.path.join(output_dir, f"{query_id}_updated.fasta")
     output_tree = os.path.join(output_dir, f"{query_id}_reoptimised")
@@ -51,23 +51,24 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
 
+        # Log the command and its output for debugging
+        st.write(f"Command executed: {' '.join(command)}")
+        st.write(f"Standard Output:\n{result.stdout.strip()}")
+        st.write(f"Standard Error:\n{result.stderr.strip()}")
+
         if result.returncode != 0:
             st.error(f"Error inferring new ML tree. Return code: {result.returncode}")
-            st.error(f"Command: {' '.join(command)}")
-            st.error(f"Standard Output:\n{result.stdout.strip()}")
-            st.error(f"Standard Error:\n{result.stderr.strip()}")
             return None, None, None
 
-        try:
-            with open("output/ml_tree_output.json", "r") as file:
-                result = json.load(file)
-            return result, output_alignment, output_tree
-        except FileNotFoundError:
-            st.error("Error: ml_tree_output.json not found in output directory.")
+        # Check if the output file was created
+        ml_tree_output_path = os.path.join(output_dir, "ml_tree_output.json")
+        if not os.path.exists(ml_tree_output_path):
+            st.error(f"Error: {ml_tree_output_path} not found after execution.")
             return None, None, None
-        except json.JSONDecodeError:
-            st.error("Error: Could not decode JSON from ml_tree_output.json")
-            return None, None, None
+
+        with open(ml_tree_output_path, "r") as file:
+            result = json.load(file)
+        return result, output_alignment, output_tree
 
     except FileNotFoundError:
         st.error("Error: infer_new_ML_tree.py not found. Ensure the file exists and the path is correct.")
