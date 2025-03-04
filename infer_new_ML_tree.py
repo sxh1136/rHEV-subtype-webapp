@@ -5,7 +5,7 @@ import os
 
 def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
     # Construct the MAFFT command as a list
-    mafft_command = ["mafft", "--thread", "-1", "--quiet", "--add", new_sequence, "--keeplength", existing_alignment]
+    mafft_command = ["mafft-linux64/mafft.bat", "--thread", "-1", "--quiet", "--add", new_sequence, "--keeplength", existing_alignment]
     
     with open(output_alignment, 'w') as output_file:
         try:
