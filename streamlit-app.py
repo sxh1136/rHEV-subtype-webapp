@@ -7,7 +7,10 @@ import tempfile
 from Bio import SeqIO
 import time
 import zipfile
+import shutil
 
+if shutil.which("mafft") is None:
+    st.error("MAFFT is not installed or not found in PATH. Please install MAFFT to use this functionality.")
 def log_error(message):
     st.error(message)
 
