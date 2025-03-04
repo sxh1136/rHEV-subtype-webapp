@@ -41,8 +41,8 @@ def run_phylogenetic_placement(output_alignment, existing_tree):
 
         if result.returncode != 0:
             error_output = result.stderr.strip()
-            st.error(f"IQ-TREE Command: {' '.join(iqtree_command)}")  # Log the command
-            st.error(f"IQ-TREE Error Output: {error_output}")  # Show the error output
+            st.error(f"IQ-TREE Command: {' '.join(iqtree_command)}")
+            st.error(f"IQ-TREE Error Output: {error_output}")
             return {"error": f"Failed to perform phylogenetic placement: {error_output}"}
         return None
     except subprocess.CalledProcessError as e:
@@ -64,8 +64,8 @@ def infer_global_optimization_tree(output_alignment, output_tree):
 
         if result.returncode != 0:
             error_output = result.stderr.strip()
-            st.error(f"IQ-TREE Optimization Command: {' '.join(iqtree_command2)}")  # Log the command
-            st.error(f"IQ-TREE Optimization Error Output: {error_output}")  # Show the error output
+            st.error(f"IQ-TREE Optimization Command: {' '.join(iqtree_command2)}")
+            st.error(f"IQ-TREE Optimization Error Output: {error_output}")
             return {"error": f"Failed to infer optimized tree: {error_output}"}
         return None
     except subprocess.CalledProcessError as e:
@@ -76,61 +76,61 @@ def infer_global_optimization_tree(output_alignment, output_tree):
         return {"error": f"An unexpected error occurred: {e}"}
 
 def main():
-    if len(sys.argv) != 6:
-        st.error("Usage: python script_name.py existing_alignment.fasta new_sequence.fasta existing_tree.treefile output_alignment.fasta output_tree_prefix")
-        sys.exit(1)
+    st.title("Phylogenetic Analysis Tool")
 
-    existing_alignment = os.path.abspath(sys.argv[1])
-    new_sequence = os.path.abspath(sys.argv[2])
-    existing_tree = os.path.abspath(sys.argv[3])
-    output_alignment = os.path.abspath(sys.argv[4])
-    output_tree = os.path.abspath(sys.argv[5])
+    if st.button("Run Analysis"):
+        existing_alignment = st.text_input("Existing Alignment File")
+        new_sequence = st.text_input("New Sequence File")
+        existing_tree = st.text_input("Existing Tree File")
+        output_alignment = st.text_input("Output Alignment File")
+        output_tree = st.text_input("Output Tree Prefix")
 
-    # Check file existence
-    if not os.path.exists(existing_alignment):
-        st.error(f"Existing alignment file not found: {existing_alignment}")
-        sys.exit(1)
-    if not os.path.exists(new_sequence):
-        st.error(f"New sequence file not found: {new_sequence}")
-        sys.exit(1)
-    if not os.path.exists(existing_tree):
-        st.error(f"Existing tree file not found: {existing_tree}")
-        sys.exit(1)
+        # Ensure all inputs are provided
+        if not all([existing_alignment, new_sequence, existing_tree, output_alignment, output_tree]):
+            st.error("Please provide all input files.")
+            return
 
-    # Add new sequence to existing alignment
-    error = add_sequence_to_msa(existing_alignment, new_sequence, output_alignment)
-    if error:
-        with open("output/ml_tree_error.json", "w") as file:
-            json.dump(error, file)
-        st.error(f"Error during MAFFT: {error}")
-        sys.exit(1)
+        # Check file existence
+        if not os.path.exists(existing_alignment):
+            st.error(f"Existing alignment file not found: {existing_alignment}")
+            return
+        if not os.path.exists(new_sequence):
+            st.error(f"New sequence file not found: {new_sequence}")
+            return
+        if not os.path.exists(existing_tree):
+            st.error(f"Existing tree file not found: {existing_tree}")
+            return
 
-    # Run IQ-TREE phylogenetic placement
-    error = run_phylogenetic_placement(output_alignment, existing_tree)
-    if error:
-        with open("output/ml_tree_error.json", "w") as file:
-            json.dump(error, file)
-        st.error(f"Error during run_phylogenetic_placement: {error}")
-        sys.exit(1)
+        # Add new sequence to existing alignment
+        error = add_sequence_to_msa(existing_alignment, new_sequence, output_alignment)
+        if error:
+            st.json(error)
+            return
 
-    # Run IQ-TREE with the constraint tree for optimization
-    error = infer_global_optimization_tree(output_alignment, output_tree)
-    if error:
-        with open("output/ml_tree_error.json", "w") as file:
-            json.dump(error, file)
-        st.error(f"Error during infer_global_optimization_tree: {error}")
-        sys.exit(1)
+        # Run IQ-TREE phylogenetic placement
+        error = run_phylogenetic_placement(output_alignment, existing_tree)
+        if error:
+            st.json(error)
+            return
 
-    # Prepare output dictionary
-    output = {
-        "output_alignment": output_alignment,
-        "output_tree": output_tree + ".treefile"
-    }
+        # Run IQ-TREE with the constraint tree for optimization
+        error = infer_global_optimization_tree(output_alignment, output_tree)
+        if error:
+            st.json(error)
+            return
 
-    # Write the output to a file
-    output_json_path = os.path.join(os.path.dirname(output_alignment), "ml_tree_output.json")
-    with open(output_json_path, "w") as file:
-        json.dump(output, file)
+        # Prepare output dictionary
+        output = {
+            "output_alignment": output_alignment,
+            "output_tree": output_tree + ".treefile"
+        }
+
+        # Write the output to a file
+        output_json_path = os.path.join(os.path.dirname(output_alignment), "ml_tree_output.json")
+        with open(output_json_path, "w") as file:
+            json.dump(output, file)
+
+        st.success("Analysis completed successfully!")
 
 if __name__ == "__main__":
     main()
