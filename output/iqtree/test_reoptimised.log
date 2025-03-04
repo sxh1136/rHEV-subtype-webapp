@@ -3,19 +3,19 @@ Developed by Bui Quang Minh, Nguyen Lam Tung, Olga Chernomor, Heiko Schmidt,
 Dominik Schrempf, Michael Woodhams, Ly Trong Nhan, Thomas Wong
 
 Host:    DT-ASUS (AVX2, FMA3, 125 GB RAM)
-Command: iqtree2 -seed 2803 -nt 20 -redo --quiet -s output/test_updated.fasta -t output/test_updated.fasta_pp.treefile -pre output/test_reoptimised -m GTR+F+G4
+Command: iqtree2 -seed 2803 -nt 20 -redo --quiet -s /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_updated.fasta -t /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_updated.fasta_pp.treefile -pre /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_reoptimised -m GTR+F+G4
 Seed:    2803 (Using SPRNG - Scalable Parallel Random Number Generator)
-Time:    Tue Mar  4 11:18:14 2025
+Time:    Tue Mar  4 11:33:05 2025
 Kernel:  AVX+FMA - 20 threads (24 CPU cores detected)
 
-Reading alignment file output/test_updated.fasta ... Fasta format detected
-Reading fasta file: done in 0.00228707 secs using 99.78% CPU
+Reading alignment file /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_updated.fasta ... Fasta format detected
+Reading fasta file: done in 0.00229986 secs using 99.75% CPU
 Alignment most likely contains DNA/RNA sequences
 WARNING: 3 sites contain only gaps or ambiguous characters.
 Alignment has 55 sequences with 6912 columns, 3167 distinct patterns
 2847 parsimony-informative, 364 singleton sites, 3701 constant sites
              Gap/Ambiguity  Composition  p-value
-Analyzing sequences: done in 7.978e-05 secs using 852.3% CPU
+Analyzing sequences: done in 7.816e-05 secs using 904.6% CPU
    1  PQ488551       1.72%    passed     71.33%
    2  PQ488552       1.46%    passed     73.60%
    3  PQ488553       1.35%    passed     70.89%
@@ -73,67 +73,68 @@ Analyzing sequences: done in 7.978e-05 secs using 852.3% CPU
   55  test          70.28%    passed     19.74%
 WARNING: 1 sequences contain more than 50% gaps/ambiguity
 ****  TOTAL          2.67%  0 sequences failed composition chi2 test (p-value<5%; df=3)
-Reading input tree file output/test_updated.fasta_pp.treefile ...
+Reading input tree file /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_updated.fasta_pp.treefile ...
 
 NOTE: 22 MB RAM (0 GB) is required!
 Estimate model parameters (epsilon = 0.100)
-1. Initial log-likelihood: -111195.272
-2. Current log-likelihood: -95674.570
-3. Current log-likelihood: -95224.050
-4. Current log-likelihood: -95202.789
-5. Current log-likelihood: -95201.443
-6. Current log-likelihood: -95201.294
-Optimal log-likelihood: -95201.266
-Rate parameters:  A-C: 1.91662  A-G: 13.17126  A-T: 2.56675  C-G: 0.93019  C-T: 22.64324  G-T: 1.00000
+1. Initial log-likelihood: -111195.453
+2. Current log-likelihood: -95676.989
+3. Current log-likelihood: -95223.981
+4. Current log-likelihood: -95202.890
+5. Current log-likelihood: -95201.472
+6. Current log-likelihood: -95201.303
+Optimal log-likelihood: -95201.271
+Rate parameters:  A-C: 1.91584  A-G: 13.16693  A-T: 2.56574  C-G: 0.92980  C-T: 22.63179  G-T: 1.00000
 Base frequencies:  A: 0.192  C: 0.285  G: 0.290  T: 0.233
 Gamma shape alpha: 0.207
-Parameters optimization took 6 rounds (0.262 sec)
+Parameters optimization took 6 rounds (0.230 sec)
 Wrote distance file to... 
 
 Do NNI search on 1 best initial trees
+UPDATE BEST LOG-LIKELIHOOD: -95201.271
 Finish initializing candidate tree set (1)
-Current best tree score: -95201.266 / CPU time: 0.061
+Current best tree score: -95201.271 / CPU time: 0.063
 Number of iterations: 1
 --------------------------------------------------------------------
 |               OPTIMIZING CANDIDATE TREE SET                      |
 --------------------------------------------------------------------
 Estimate model parameters (epsilon = 0.100)
-BETTER TREE FOUND at iteration 2: -95200.436
-Iteration 10 / LogL: -95200.442 / Time: 0h:0m:3s
-Iteration 20 / LogL: -95205.619 / Time: 0h:0m:8s
-Iteration 30 / LogL: -95203.481 / Time: 0h:0m:12s (0h:0m:32s left)
-Iteration 40 / LogL: -95200.453 / Time: 0h:0m:17s (0h:0m:28s left)
-Iteration 50 / LogL: -95202.229 / Time: 0h:0m:23s (0h:0m:24s left)
-Iteration 60 / LogL: -95201.312 / Time: 0h:0m:29s (0h:0m:21s left)
-Iteration 70 / LogL: -95200.608 / Time: 0h:0m:34s (0h:0m:15s left)
-Iteration 80 / LogL: -95201.353 / Time: 0h:0m:40s (0h:0m:11s left)
-Iteration 90 / LogL: -95200.663 / Time: 0h:0m:47s (0h:0m:6s left)
-Iteration 100 / LogL: -95200.443 / Time: 0h:0m:52s (0h:0m:1s left)
-TREE SEARCH COMPLETED AFTER 103 ITERATIONS / Time: 0h:0m:54s
+BETTER TREE FOUND at iteration 2: -95200.440
+Iteration 10 / LogL: -95201.311 / Time: 0h:0m:3s
+Iteration 20 / LogL: -95205.622 / Time: 0h:0m:8s
+Iteration 30 / LogL: -95203.485 / Time: 0h:0m:15s (0h:0m:38s left)
+Iteration 40 / LogL: -95200.456 / Time: 0h:0m:21s (0h:0m:34s left)
+Iteration 50 / LogL: -95202.234 / Time: 0h:0m:28s (0h:0m:30s left)
+Iteration 60 / LogL: -95201.317 / Time: 0h:0m:36s (0h:0m:26s left)
+Iteration 70 / LogL: -95200.614 / Time: 0h:0m:42s (0h:0m:19s left)
+Iteration 80 / LogL: -95201.358 / Time: 0h:0m:49s (0h:0m:13s left)
+Iteration 90 / LogL: -95200.668 / Time: 0h:0m:55s (0h:0m:7s left)
+Iteration 100 / LogL: -95200.446 / Time: 0h:1m:1s (0h:0m:1s left)
+TREE SEARCH COMPLETED AFTER 103 ITERATIONS / Time: 0h:1m:4s
 
 --------------------------------------------------------------------
 |                    FINALIZING TREE SEARCH                        |
 --------------------------------------------------------------------
 Performs final model parameters optimization
 Estimate model parameters (epsilon = 0.010)
-1. Initial log-likelihood: -95200.436
-Optimal log-likelihood: -95200.435
-Rate parameters:  A-C: 1.91217  A-G: 13.18098  A-T: 2.55686  C-G: 0.92796  C-T: 22.64710  G-T: 1.00000
+1. Initial log-likelihood: -95200.440
+Optimal log-likelihood: -95200.438
+Rate parameters:  A-C: 1.91164  A-G: 13.17612  A-T: 2.55577  C-G: 0.92820  C-T: 22.63594  G-T: 1.00000
 Base frequencies:  A: 0.192  C: 0.285  G: 0.290  T: 0.233
 Gamma shape alpha: 0.207
-Parameters optimization took 1 rounds (0.021 sec)
-BEST SCORE FOUND : -95200.435
-Total tree length: 4.884
+Parameters optimization took 1 rounds (0.015 sec)
+BEST SCORE FOUND : -95200.438
+Total tree length: 4.883
 
 Total number of iterations: 103
-CPU time used for tree search: 288.956 sec (0h:4m:48s)
-Wall-clock time used for tree search: 54.675 sec (0h:0m:54s)
-Total CPU time used: 292.034 sec (0h:4m:52s)
-Total wall-clock time used: 54.963 sec (0h:0m:54s)
+CPU time used for tree search: 354.142 sec (0h:5m:54s)
+Wall-clock time used for tree search: 63.980 sec (0h:1m:3s)
+Total CPU time used: 356.888 sec (0h:5m:56s)
+Total wall-clock time used: 64.230 sec (0h:1m:4s)
 
 Analysis results written to: 
-  IQ-TREE report:                output/test_reoptimised.iqtree
-  Maximum-likelihood tree:       output/test_reoptimised.treefile
-  Screen log file:               output/test_reoptimised.log
+  IQ-TREE report:                /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_reoptimised.iqtree
+  Maximum-likelihood tree:       /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_reoptimised.treefile
+  Screen log file:               /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_reoptimised.log
 
-Date and Time: Tue Mar  4 11:19:09 2025
+Date and Time: Tue Mar  4 11:34:10 2025

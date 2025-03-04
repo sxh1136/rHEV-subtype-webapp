@@ -16,11 +16,12 @@ def extract_fasta_header(input_fasta):
 
 def calculate_p_distance(input_fasta, reference_fasta):
     try:
-        # Construct the absolute path to the script
-        script_path = os.path.abspath("p-distance-calc.py")
+        # Get absolute paths
+        input_fasta_path = os.path.abspath(input_fasta)
+        reference_fasta_path = os.path.abspath(reference_fasta)
 
         # Construct the command as a list
-        command = [sys.executable, script_path, input_fasta, reference_fasta]
+        command = [sys.executable, "p-distance-calc.py", input_fasta_path, reference_fasta_path]
 
         # Execute the command
         result = subprocess.run(command, check=True, capture_output=True, text=True)
@@ -30,7 +31,6 @@ def calculate_p_distance(input_fasta, reference_fasta):
             st.error(f"Error calculating p-distance. Return code: {result.returncode}")
             st.error(f"Standard Error:\n{result.stderr}")
             return None
-
         # Read the output from the file
         try:
             with open("output/p_distance_output.json", "r") as file:
@@ -42,9 +42,7 @@ def calculate_p_distance(input_fasta, reference_fasta):
         except json.JSONDecodeError as e:
             st.error(f"Error: Could not decode JSON from p_distance_output.json")
             return None
-    except FileNotFoundError as e:
-        st.error(f"Error: p-distance-calc.py not found. Ensure the file exists and the path is correct.")
-        return None
+
     except subprocess.CalledProcessError as e:
         st.error(f"Subprocess error: {e}")
         return None
@@ -97,11 +95,12 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
 
 def infer_subtype(input_newick, predefined_label, csv_file):
     try:
-        # Construct the absolute path to the script
-        script_path = os.path.abspath("ML_patristic-dist_calc.py")
+        # Get absolute paths
+        input_newick_path = os.path.abspath(input_newick)
+        csv_file_path = os.path.abspath(csv_file)
 
         # Construct the command as a list
-        command = [sys.executable, script_path, input_newick, predefined_label, csv_file]
+        command = [sys.executable, "ML_patristic-dist_calc.py", input_newick_path, predefined_label, csv_file_path]
 
         # Execute the command
         result = subprocess.run(command, check=True, capture_output=True, text=True)
@@ -123,9 +122,6 @@ def infer_subtype(input_newick, predefined_label, csv_file):
         except json.JSONDecodeError as e:
             st.error(f"Error: Could not decode JSON from subtype_output.json")
             return None
-    except FileNotFoundError as e:
-        st.error(f"Error: ML_patristic-dist_calc.py not found. Ensure the file exists and the path is correct.")
-        return None
     except subprocess.CalledProcessError as e:
         st.error(f"Subprocess error: {e}")
         return None
@@ -134,8 +130,17 @@ def main():
     st.title("Rat Hepatitis E Subtyping Tool v1.0")
     st.header("Sridhar Group")
     
+    # Define fixed file names
+    reference_fasta = "reference_genomes.fa"
+    existing_alignment = "reference_alignment.fa"
+    existing_tree = "reference_tree.tree"
+    csv_file = "reference_subtypes.csv"
+
     # File upload with specific types
     input_fasta = st.file_uploader("Upload FASTA file", type=["fasta", "fas", "fa"])
+
+    # Define output_dir here to ensure it is always defined
+    output_dir = "output"
     
     if input_fasta is not None:
         # Save the uploaded file to a temporary file
@@ -155,14 +160,7 @@ def main():
                  break
         
         # Create output directory
-        output_dir = "output"
         os.makedirs(output_dir, exist_ok=True)
-        
-        # Define fixed file names
-        reference_fasta = "reference_genomes.fa"
-        existing_alignment = "reference_alignment.fa"
-        existing_tree = "reference_tree.tree"
-        csv_file = "reference_subtypes.csv"
         
         # Progress bar and current status
         progress_bar = st.progress(0)
@@ -193,7 +191,6 @@ def main():
             st.error("Failed to infer new ML tree.")
             return
         
-
         # Infer subtype
         status_placeholder.write("\nInferring subtype...")
         input_newick = f"{output_tree}.treefile"
@@ -268,9 +265,7 @@ def main():
         try:
             os.remove(temp_fasta_path)
         except FileNotFoundError:
-            pass  # Ignore if file does not exist
-
-        # Create iqtree directory if it doesn't exist
+            pass  # Ignore if file does not exist... # Create iqtree directory if it doesn't exist
         iqtree_dir = os.path.join(output_dir, "iqtree")
         os.makedirs(iqtree_dir, exist_ok=True)
         
