@@ -34,7 +34,7 @@ def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
 
 def run_phylogenetic_placement(output_alignment, existing_tree):
     # Run IQ-TREE with the guide tree
-    iqtree_command = ["iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-g", existing_tree, "-pre", f"{output_alignment}_pp", "-m", "GTR+F+G4"]
+    iqtree_command = ["iqtree-2.4.0/bin/iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-g", existing_tree, "-pre", f"{output_alignment}_pp", "-m", "GTR+F+G4"]
     
     try:
         result = subprocess.run(iqtree_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
