@@ -52,8 +52,10 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
         result = subprocess.run(command, check=True, capture_output=True, text=True)
 
         if result.returncode != 0:
-            log_error(f"Error inferring new ML tree. Return code: {result.returncode}")
-            log_error(f"Standard Error:\n{result.stderr}")
+            st.error(f"Error inferring new ML tree. Return code: {result.returncode}")
+            st.error(f"Command: {' '.join(command)}")
+            st.error(f"Standard Output:\n{result.stdout.strip()}")
+            st.error(f"Standard Error:\n{result.stderr.strip()}")
             return None, None, None
 
         try:
@@ -61,17 +63,20 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
                 result = json.load(file)
             return result, output_alignment, output_tree
         except FileNotFoundError:
-            log_error("Error: ml_tree_output.json not found in output directory.")
+            st.error("Error: ml_tree_output.json not found in output directory.")
             return None, None, None
         except json.JSONDecodeError:
-            log_error("Error: Could not decode JSON from ml_tree_output.json")
+            st.error("Error: Could not decode JSON from ml_tree_output.json")
             return None, None, None
 
     except FileNotFoundError:
-        log_error("Error: infer_new_ML_tree.py not found. Ensure the file exists and the path is correct.")
+        st.error("Error: infer_new_ML_tree.py not found. Ensure the file exists and the path is correct.")
         return None, None, None
     except subprocess.CalledProcessError as e:
-        log_error(f"Subprocess error: {e}")
+        st.error(f"Subprocess error: {e}")
+        st.error(f"Return code: {e.returncode}")
+        st.error(f"Output: {e.output}")
+        st.error(f"Error: {e.stderr}")
         return None, None, None
 
 def infer_subtype(input_newick, predefined_label, csv_file):
