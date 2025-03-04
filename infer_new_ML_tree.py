@@ -4,22 +4,9 @@ import json
 import os
 
 def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
-    # Try to find mafft in the environment
-    mafft_path = None
-    try:
-        mafft_path = subprocess.check_output(["which", "mafft"]).decode("utf-8").strip()
-    except subprocess.CalledProcessError:
-        pass
-
-    # If mafft is not in the PATH, use a default path. Adjust this if necessary.
-    if not mafft_path:
-        mafft_path = "/usr/bin/mafft"  # Try a common path
-        if not os.path.exists(mafft_path):
-            print("Error: mafft not found. Please install it or adjust the path.", file=sys.stderr)
-            return {"error": "mafft not found"}
 
     # Construct the MAFFT command as a string
-    mafft_command = f"{mafft_path} --thread -1 --quiet --add {new_sequence} --keeplength {existing_alignment} > {output_alignment}"
+    mafft_command = f"mafft --thread -1 --quiet --add {new_sequence} --keeplength {existing_alignment} > {output_alignment}"
 
     try:
         # Run the MAFFT command with shell=True
