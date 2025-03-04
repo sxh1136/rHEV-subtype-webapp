@@ -1,0 +1,216 @@
+IQ-TREE 2.4.0 built Feb 12 2025
+
+Input file name: output/test_updated.fasta
+Type of analysis: tree reconstruction
+Random seed number: 2803
+
+REFERENCES
+----------
+
+To cite IQ-TREE please use:
+
+Bui Quang Minh, Heiko A. Schmidt, Olga Chernomor, Dominik Schrempf,
+Michael D. Woodhams, Arndt von Haeseler, and Robert Lanfear (2020)
+IQ-TREE 2: New models and efficient methods for phylogenetic inference
+in the genomic era. Mol. Biol. Evol., in press.
+https://doi.org/10.1093/molbev/msaa015
+
+SEQUENCE ALIGNMENT
+------------------
+
+Input data: 55 sequences with 6912 nucleotide sites
+Number of constant sites: 3701 (= 53.5446% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 3701 (= 53.5446% of all sites)
+Number of parsimony informative sites: 2847
+Number of distinct site patterns: 3167
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: GTR+F+G4
+
+Rate parameter R:
+
+  A-C: 1.9113
+  A-G: 13.1684
+  A-T: 2.5617
+  C-G: 0.9294
+  C-T: 22.6326
+  G-T: 1.0000
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.1924
+  pi(C) = 0.2849
+  pi(G) = 0.2899
+  pi(T) = 0.2328
+
+Rate matrix Q:
+
+  A   -0.9536    0.1047    0.7341    0.1147
+  C   0.07071    -1.136   0.05181     1.014
+  G    0.4872   0.05094   -0.5829   0.04478
+  T   0.09478      1.24   0.05575    -1.391
+
+Model of rate heterogeneity: Gamma with 4 categories
+Gamma shape alpha: 0.2074
+
+ Category  Relative_rate  Proportion
+  1         0.0006801      0.25
+  2         0.03817        0.25
+  3         0.4028         0.25
+  4         3.558          0.25
+Relative rates are computed as MEAN of the portion of the Gamma distribution falling in the category.
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -95201.2692 (s.e. 1240.0418)
+Unconstrained log-likelihood (without tree): -39438.1477
+Number of free parameters (#branches + #model parameters): 116
+Akaike information criterion (AIC) score: 190634.5383
+Corrected Akaike information criterion (AICc) score: 190638.5330
+Bayesian information criterion (BIC) score: 191428.0960
+
+Total tree length (sum of branch lengths): 4.8875
+Sum of internal branch lengths: 2.1112 (43.1968% of tree length)
+
+NOTE: Tree is UNROOTED although outgroup taxon 'PQ488551' is drawn at root
+
++--PQ488551
+|
+|     +--PQ488552
+|  +--| (57)
+|  |  +--MN450852.1
++--| (98)
+|  |        +--PQ488553
+|  |     +--| (100)
+|  |     |  +--PQ488558
+|  |  +--| (100)
+|  |  |  |  +--PQ488555
+|  |  |  +--| (100)
+|  |  |     +--PQ488556
+|  +--| (57)
+|     |  +--PQ488560
+|     +--| (100)
+|        +--MN450854.1
+|
+|                                                                            +--PQ488559
+|                                                                         +--| (100)
+|                                                                         |  +--MH729811.1
+|                                                                      +--| (100)
+|                                                                      |  |  +---AB847308.1
+|                                                                      |  +--|
+|                                                                      |     |     +--OM037395.1
+|                                                                      |     |  +--| (95)
+|                                                                      |     |  |  +--OM037396.1
+|                                                                      |     +--| (100)
+|                                                                      |        +--test
+|                                                                   +--| (73)
+|                                                                   |  +---KM516906.1
+|                                                                +--| (24)
+|                                                                |  |        +--GU345043.1
+|                                                                |  |     +--| (100)
+|                                                                |  |     |  +--NC_038504.1
+|                                                                |  |  +--| (100)
+|                                                                |  |  |  +--MW795567.1
+|                                                                |  +--| (39)
+|                                                                |     |  +----JN167537.1
+|                                                                |     +--| (91)
+|                                                                |        |  +--JN167538.1
+|                                                                |        +--| (100)
+|                                                                |           +---MW795566.1
+|                                                             +--| (53)
+|                                                             |  +----ON644869.1
+|                                                     +-------| (100)
+|                                                     |       |  +--OP947206.1
+|                                                     |       +--| (100)
+|                                                     |          |  +--OP947207.1
+|                                                     |          +--| (100)
+|                                                     |             +--OP947209.1
+|                                                  +--| (87)
+|                                                  |  +--------------MK050105.1
+|                             +--------------------| (100)
+|                             |                    |              +--LC549186.1
+|                             |                    |           +--| (100)
+|                             |                    |           |  +--LC549187.1
+|                             |                    |      +----| (100)
+|                             |                    |      |    +--MZ357113.1
+|                             |                    |   +--| (100)
+|                             |                    |   |  +-----ON887282.1
+|                             |                    +---| (100)
+|                             |                        +-----ON887283.1
+|                          +--| (94)
+|                          |  |       +--AB847306.1
+|                          |  +-------| (100)
+|                          |          +--AB847309.1
+|                    +-----| (100)
+|                    |     +----------MG600417.1
+|                 +--| (99)
+|                 |  +-----LC573546.1
+|              +--| (89)
+|              |  |     +--MN450853.1
+|              |  |  +--| (100)
+|              |  |  |  +--MZ868954.1
+|              |  +--| (100)
+|              |     +--MZ542728.1
+|           +--| (100)
+|           |  |     +---LC225389.1
+|           |  |  +--| (100)
+|           |  |  |  |  +--LC549184.1
+|           |  |  |  +--| (100)
+|           |  |  |     +--MH729812.1
+|           |  +--| (100)
+|           |     |  +---OP947211.1
+|           |     +--| (100)
+|           |        +---OQ067397.1
+|        +--| (100)
+|        |  |  +--AB847305.1
+|        |  +--| (100)
+|        |     |  +--LC145325.1
+|        |     +--| (68)
+|        |        +--LC225388.1
+|     +--| (100)
+|     |  |        +--AB847307.1
+|     |  |     +--| (89)
+|     |  |     |  +--MT210621.1
+|     |  |  +--| (98)
+|     |  |  |  +--OP947210.1
+|     |  +--| (100)
+|     |     +---LC549185.1
+|  +--| (100)
+|  |  +--JX120573.1
++--| (100)
+   |     +--MG813927.1
+   |  +--| (100)
+   |  |  +--MN450851.1
+   +--| (100)
+      +--MN450855.1
+
+Tree in newick format:
+
+(PQ488551:0.0083975487,((PQ488552:0.0056527036,MN450852.1:0.0034680490)57:0.0008516409,(((PQ488553:0.0029409077,PQ488558:0.0052545793)100:0.0014149705,(PQ488555:0.0045310629,PQ488556:0.0078819046)100:0.0019411168)100:0.0010402625,(PQ488560:0.0029773743,MN450854.1:0.0020948566)100:0.0025301326)57:0.0006718795)98:0.0007552313,(((((((((((((((((PQ488559:0.0526596688,MH729811.1:0.0722329308)100:0.0234186112,(AB847308.1:0.0748573750,((OM037395.1:0.0020576872,OM037396.1:0.0024480414)95:0.0268088048,test:0.0320808994)100:0.0550255029):0.0060302501)100:0.0190904550,KM516906.1:0.0814891734)73:0.0040262704,(((GU345043.1:0.0237074335,NC_038504.1:0.0225921162)100:0.0477062006,MW795567.1:0.0721896808)100:0.0330183281,(JN167537.1:0.0953268769,(JN167538.1:0.0734105924,MW795566.1:0.0776921166)100:0.0160195158)91:0.0074869032)39:0.0033952318)24:0.0052055558,ON644869.1:0.1006023311)53:0.0170116828,(OP947206.1:0.0399160887,(OP947207.1:0.0076422871,OP947209.1:0.0134110111)100:0.0316527404)100:0.0557745083)100:0.1534871178,MK050105.1:0.2860559312)87:0.0588529102,((((LC549186.1:0.0013105932,LC549187.1:0.0026888276)100:0.0539071741,MZ357113.1:0.0588650043)100:0.0981772700,ON887282.1:0.1167478130)100:0.0380162003,ON887283.1:0.1251777824)100:0.0872577652)100:0.3954727907,(AB847306.1:0.0470564322,AB847309.1:0.0569376597)100:0.1604864178)94:0.0624413987,MG600417.1:0.2089601760)100:0.1241735542,LC573546.1:0.1177814760)99:0.0296898173,((MN450853.1:0.0301602144,MZ868954.1:0.0258702681)100:0.0398306361,MZ542728.1:0.0624763237)100:0.0695076486)89:0.0068867750,((LC225389.1:0.0853428183,(LC549184.1:0.0451503254,MH729812.1:0.0456649729)100:0.0366190180)100:0.0219325741,(OP947211.1:0.0755992625,OQ067397.1:0.0783484529)100:0.0360794282)100:0.0232446234)100:0.0367264523,(AB847305.1:0.0282710572,(LC145325.1:0.0358922475,LC225388.1:0.0486149735)68:0.0074184295)100:0.0609111230)100:0.0164925020,(((AB847307.1:0.0590775105,MT210621.1:0.0560952068)89:0.0070511558,OP947210.1:0.0721779049)98:0.0064454080,LC549185.1:0.0791188685)100:0.0142250038)100:0.0500489978,JX120573.1:0.0318623882)100:0.0126063746,((MG813927.1:0.0014832546,MN450851.1:0.0011692654)100:0.0021907023,MN450855.1:0.0047725266)100:0.0170789421)100:0.0231044566);
+
+ALISIM COMMAND
+--------------
+To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
+
+--alisim simulated_MSA -t output/test_updated.fasta_pp.treefile -m "GTR{1.91125,13.1684,2.56169,0.929417,22.6326}+F{0.192361,0.284945,0.289851,0.232843}+G4{0.207426}" --length 6912
+
+To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
+
+iqtree -s output/test_updated.fasta --alisim mimicked_MSA
+
+To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
+
+iqtree -s output/test_updated.fasta --alisim mimicked_MSA --num-alignments 100
+
+For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
+
+TIME STAMP
+----------
+
+Date and time: Tue Mar  4 11:18:14 2025
+Total CPU time used: 9.79584 seconds (0h:0m:9s)
+Total wall-clock time used: 1.75801 seconds (0h:0m:1s)
+

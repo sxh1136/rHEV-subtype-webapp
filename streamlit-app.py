@@ -16,43 +16,110 @@ def extract_fasta_header(input_fasta):
 
 def calculate_p_distance(input_fasta, reference_fasta):
     try:
-        command = f"{sys.executable} p-distance-calc.py {input_fasta} {reference_fasta}"
-        subprocess.run(command, shell=True, check=True)
-        
+        # Construct the absolute path to the script
+        script_path = os.path.abspath("p-distance-calc.py")
+
+        # Construct the command as a list
+        command = [sys.executable, script_path, input_fasta, reference_fasta]
+
+        # Execute the command
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+
+        # Check for errors based on the return code and stderr
+        if result.returncode != 0:
+            st.error(f"Error calculating p-distance. Return code: {result.returncode}")
+            st.error(f"Standard Error:\n{result.stderr}")
+            return None
+
         # Read the output from the file
-        with open("output/p_distance_output.json", "r") as file:
-            result = json.load(file)
-        return result
+        try:
+            with open("output/p_distance_output.json", "r") as file:
+                result = json.load(file)
+            return result
+        except FileNotFoundError as e:
+            st.error(f"Error: p_distance_output.json not found in output directory.")
+            return None
+        except json.JSONDecodeError as e:
+            st.error(f"Error: Could not decode JSON from p_distance_output.json")
+            return None
+    except FileNotFoundError as e:
+        st.error(f"Error: p-distance-calc.py not found. Ensure the file exists and the path is correct.")
+        return None
     except subprocess.CalledProcessError as e:
-        st.error(f"Error calculating p-distance: {e}")
+        st.error(f"Subprocess error: {e}")
         return None
 
 def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, output_dir):
     try:
         output_alignment = os.path.join(output_dir, f"{query_id}_updated.fasta")
         output_tree = os.path.join(output_dir, f"{query_id}_reoptimised")
-        command = f"{sys.executable} infer_new_ML_tree.py {existing_alignment} {new_sequence} {existing_tree} {output_alignment} {output_tree}"
-        subprocess.run(command, shell=True, check=True)
-        
+
+        # Construct the absolute path to the script
+        script_path = os.path.abspath("infer_new_ML_tree.py")
+
+        # Construct the command as a list
+        command = [sys.executable, script_path, existing_alignment, new_sequence, existing_tree, output_alignment, output_tree]
+
+        # Execute the command
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+
+        # Check for errors based on the return code and stderr
+        if result.returncode != 0:
+            st.error(f"Error inferring new ML tree. Return code: {result.returncode}")
+            st.error(f"Standard Error:\n{result.stderr}")
+            return None, None, None
+
         # Read the output from the file
-        with open("output/ml_tree_output.json", "r") as file:
-            result = json.load(file)
-        return result, output_alignment, output_tree
+        try:
+            with open("output/ml_tree_output.json", "r") as file:
+                result = json.load(file)
+            return result, output_alignment, output_tree
+        except FileNotFoundError as e:
+            st.error(f"Error: ml_tree_output.json not found in output directory.")
+            return None, None, None
+        except json.JSONDecodeError as e:
+            st.error(f"Error: Could not decode JSON from ml_tree_output.json")
+            return None, None, None
+    except FileNotFoundError as e:
+        st.error(f"Error: infer_new_ML_tree.py not found. Ensure the file exists and the path is correct.")
+        return None, None, None
     except subprocess.CalledProcessError as e:
-        st.error(f"Error inferring new ML tree: {e}")
+        st.error(f"Subprocess error: {e}")
         return None, None, None
 
 def infer_subtype(input_newick, predefined_label, csv_file):
     try:
-        command = f"{sys.executable} ML_patristic-dist_calc.py {input_newick} {predefined_label} {csv_file}"
-        subprocess.run(command, shell=True, check=True)
-        
+        # Construct the absolute path to the script
+        script_path = os.path.abspath("ML_patristic-dist_calc.py")
+
+        # Construct the command as a list
+        command = [sys.executable, script_path, input_newick, predefined_label, csv_file]
+
+        # Execute the command
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+
+        # Check for errors based on the return code and stderr
+        if result.returncode != 0:
+            st.error(f"Error inferring subtype. Return code: {result.returncode}")
+            st.error(f"Standard Error:\n{result.stderr}")
+            return None
+
         # Read the output from the file
-        with open("output/subtype_output.json", "r") as file:
-            result = json.load(file)
-        return result
+        try:
+            with open("output/subtype_output.json", "r") as file:
+                result = json.load(file)
+            return result
+        except FileNotFoundError as e:
+            st.error(f"Error: subtype_output.json not found in output directory.")
+            return None
+        except json.JSONDecodeError as e:
+            st.error(f"Error: Could not decode JSON from subtype_output.json")
+            return None
+    except FileNotFoundError as e:
+        st.error(f"Error: ML_patristic-dist_calc.py not found. Ensure the file exists and the path is correct.")
+        return None
     except subprocess.CalledProcessError as e:
-        st.error(f"Error inferring subtype: {e}")
+        st.error(f"Subprocess error: {e}")
         return None
 
 def main():
