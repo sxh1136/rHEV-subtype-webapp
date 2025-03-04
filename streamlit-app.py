@@ -53,7 +53,7 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
         output_tree = os.path.join(output_dir, f"{query_id}_reoptimised")
 
         # Construct the absolute path to the script
-        script_path = os.path.abspath("infer_new_ML_tree.py")
+        script_path = "infer_new_ML_tree.py"
 
         # Get absolute paths for ALL file arguments
         existing_alignment_path = os.path.abspath(existing_alignment)
@@ -61,7 +61,6 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
         existing_tree_path = os.path.abspath(existing_tree)
         output_alignment_path = os.path.abspath(output_alignment)
         output_tree_path = os.path.abspath(output_tree)
-
 
         # Construct the command as a list
         command = [sys.executable, script_path, existing_alignment_path, new_sequence_path, existing_tree_path, output_alignment_path, output_tree_path]
@@ -265,7 +264,9 @@ def main():
         try:
             os.remove(temp_fasta_path)
         except FileNotFoundError:
-            pass  # Ignore if file does not exist... # Create iqtree directory if it doesn't exist
+            pass  # Ignore if file does not exist
+
+        # Create iqtree directory if it doesn't exist
         iqtree_dir = os.path.join(output_dir, "iqtree")
         os.makedirs(iqtree_dir, exist_ok=True)
         

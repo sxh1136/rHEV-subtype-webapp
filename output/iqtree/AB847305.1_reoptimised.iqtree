@@ -1,7 +1,7 @@
 IQ-TREE 2.4.0 built Feb 12 2025
 
-Input file name: /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_updated.fasta
-User tree file name: /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_updated.fasta_pp.treefile
+Input file name: /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/AB847305.1_updated.fasta
+User tree file name: /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/AB847305.1_updated.fasta_pp.treefile
 Type of analysis: tree reconstruction
 Random seed number: 2803
 
@@ -22,8 +22,8 @@ SEQUENCE ALIGNMENT
 Input data: 55 sequences with 6912 nucleotide sites
 Number of constant sites: 3701 (= 53.5446% of all sites)
 Number of invariant (constant or ambiguous constant) sites: 3701 (= 53.5446% of all sites)
-Number of parsimony informative sites: 2847
-Number of distinct site patterns: 3167
+Number of parsimony informative sites: 2853
+Number of distinct site patterns: 3125
 
 SUBSTITUTION PROCESS
 --------------------
@@ -32,49 +32,49 @@ Model of substitution: GTR+F+G4
 
 Rate parameter R:
 
-  A-C: 1.9116
-  A-G: 13.1761
-  A-T: 2.5558
-  C-G: 0.9282
-  C-T: 22.6359
+  A-C: 1.8957
+  A-G: 13.0636
+  A-T: 2.5329
+  C-G: 0.9214
+  C-T: 22.3689
   G-T: 1.0000
 
 State frequencies: (empirical counts from alignment)
 
   pi(A) = 0.1924
-  pi(C) = 0.2849
-  pi(G) = 0.2899
-  pi(T) = 0.2328
+  pi(C) = 0.285
+  pi(G) = 0.2898
+  pi(T) = 0.2329
 
 Rate matrix Q:
 
-  A   -0.9537    0.1048    0.7345    0.1144
-  C   0.07072    -1.136   0.05174     1.014
-  G    0.4874   0.05086   -0.5831   0.04478
-  T   0.09455      1.24   0.05574    -1.391
+  A   -0.9549    0.1049    0.7354    0.1146
+  C   0.07084    -1.135   0.05187     1.012
+  G    0.4882   0.05101   -0.5844   0.04525
+  T   0.09465     1.238   0.05629    -1.389
 
 Model of rate heterogeneity: Gamma with 4 categories
-Gamma shape alpha: 0.2068
+Gamma shape alpha: 0.2064
 
  Category  Relative_rate  Proportion
-  1         0.0006657      0.25
-  2         0.03776        0.25
-  3         0.4011         0.25
-  4         3.561          0.25
+  1         0.0006584      0.25
+  2         0.03756        0.25
+  3         0.4002         0.25
+  4         3.562          0.25
 Relative rates are computed as MEAN of the portion of the Gamma distribution falling in the category.
 
 MAXIMUM LIKELIHOOD TREE
 -----------------------
 
-Log-likelihood of the tree: -95200.4381 (s.e. 1240.0857)
-Unconstrained log-likelihood (without tree): -39438.1477
+Log-likelihood of the tree: -94787.6679 (s.e. 1233.2283)
+Unconstrained log-likelihood (without tree): -37329.1229
 Number of free parameters (#branches + #model parameters): 116
-Akaike information criterion (AIC) score: 190632.8762
-Corrected Akaike information criterion (AICc) score: 190636.8709
-Bayesian information criterion (BIC) score: 191426.4339
+Akaike information criterion (AIC) score: 189807.3358
+Corrected Akaike information criterion (AICc) score: 189811.3305
+Bayesian information criterion (BIC) score: 190600.8935
 
-Total tree length (sum of branch lengths): 4.8833
-Sum of internal branch lengths: 2.1264 (43.5438% of tree length)
+Total tree length (sum of branch lengths): 4.8367
+Sum of internal branch lengths: 2.1186 (43.8022% of tree length)
 
 NOTE: Tree is UNROOTED although outgroup taxon 'PQ488551' is drawn at root
 
@@ -91,47 +91,45 @@ NOTE: Tree is UNROOTED although outgroup taxon 'PQ488551' is drawn at root
 |  |  |  |  +--PQ488555
 |  |  |  +--| (100)
 |  |  |     +--PQ488556
-|  +--| (57)
+|  +--| (100)
 |     |  +--PQ488560
-|     +--| (100)
+|     +--| (57)
 |        +--MN450854.1
 |
 |                                                                         +--PQ488559
 |                                                                      +--| (100)
 |                                                                      |  +--MH729811.1
 |                                                                   +--| (100)
-|                                                                   |  |  +---AB847308.1
-|                                                                   |  +--|
-|                                                                   |     |     +--OM037395.1
-|                                                                   |     |  +--| (95)
-|                                                                   |     |  |  +--OM037396.1
-|                                                                   |     +--| (100)
-|                                                                   |        +--test
-|                                                                +--| (73)
+|                                                                   |  |  +--AB847308.1
+|                                                                   |  +--| (73)
+|                                                                   |     |   +--OM037395.1
+|                                                                   |     +---| (95)
+|                                                                   |         +--OM037396.1
+|                                                                +--| (100)
 |                                                                |  +---KM516906.1
-|                                                             +--| (100)
+|                                                             +--| (53)
 |                                                             |  |           +--GU345043.1
 |                                                             |  |        +--| (100)
 |                                                             |  |        |  +--NC_038504.1
 |                                                             |  |     +--| (100)
 |                                                             |  |     |  +--MW795567.1
-|                                                             |  |  +--| (24)
+|                                                             |  |  +--| (39)
 |                                                             |  |  |  |  +----JN167537.1
-|                                                             |  |  |  +--| (100)
+|                                                             |  |  |  +--| (91)
 |                                                             |  |  |     |  +--JN167538.1
-|                                                             |  |  |     +--| (91)
+|                                                             |  |  |     +--| (100)
 |                                                             |  |  |        +---MW795566.1
-|                                                             |  +--| (39)
+|                                                             |  +--| (24)
 |                                                             |     |   +--OP947206.1
 |                                                             |     +---| (100)
 |                                                             |         |  +--OP947207.1
 |                                                             |         +--| (100)
 |                                                             |            +--OP947209.1
-|                                                     +-------| (100)
+|                                                     +-------| (87)
 |                                                     |       +---ON644869.1
-|                                                  +--| (87)
+|                                                  +--| (100)
 |                                                  |  +--------------MK050105.1
-|                             +--------------------| (53)
+|                             +--------------------| (94)
 |                             |                    |              +--LC549186.1
 |                             |                    |           +--| (100)
 |                             |                    |           |  +--LC549187.1
@@ -141,7 +139,7 @@ NOTE: Tree is UNROOTED although outgroup taxon 'PQ488551' is drawn at root
 |                             |                    |   |  +-----ON887282.1
 |                             |                    +---| (100)
 |                             |                        +-----ON887283.1
-|                          +--| (94)
+|                          +--| (100)
 |                          |  |       +--AB847306.1
 |                          |  +-------| (100)
 |                          |          +--AB847309.1
@@ -149,13 +147,13 @@ NOTE: Tree is UNROOTED although outgroup taxon 'PQ488551' is drawn at root
 |                    |     +----------MG600417.1
 |                 +--| (100)
 |                 |  +-----LC573546.1
-|              +--| (89)
+|              +--| (99)
 |              |  |     +--MN450853.1
 |              |  |  +--| (100)
 |              |  |  |  +--MZ868954.1
 |              |  +--| (100)
 |              |     +--MZ542728.1
-|           +--| (99)
+|           +--| (89)
 |           |  |     +---LC225389.1
 |           |  |  +--| (100)
 |           |  |  |  |  +--LC549184.1
@@ -166,18 +164,20 @@ NOTE: Tree is UNROOTED although outgroup taxon 'PQ488551' is drawn at root
 |           |     +--| (100)
 |           |        +---OQ067397.1
 |        +--| (100)
-|        |  |  +--AB847305.1
+|        |  |     +**AB847305.1
+|        |  |  +--|
+|        |  |  |  +**AB847305.1_Orthohepevirus
 |        |  +--| (100)
 |        |     |  +--LC145325.1
 |        |     +--| (68)
 |        |        +--LC225388.1
 |     +--| (100)
 |     |  |        +--AB847307.1
-|     |  |     +--| (89)
+|     |  |     +--| (100)
 |     |  |     |  +--MT210621.1
-|     |  |  +--| (98)
+|     |  |  +--| (89)
 |     |  |  |  +--OP947210.1
-|     |  +--| (100)
+|     |  +--| (98)
 |     |     +---LC549185.1
 |  +--| (100)
 |  |  +--JX120573.1
@@ -190,28 +190,28 @@ NOTE: Tree is UNROOTED although outgroup taxon 'PQ488551' is drawn at root
 
 Tree in newick format:
 
-(PQ488551:0.0083835807,((PQ488552:0.0056440961,MN450852.1:0.0034627253)57:0.0008509414,(((PQ488553:0.0029364660,PQ488558:0.0052466919)100:0.0014128599,(PQ488555:0.0045240791,PQ488556:0.0078699407)100:0.0019382852)100:0.0010389112,(PQ488560:0.0029727417,MN450854.1:0.0020917233)100:0.0025262766)57:0.0006713871)98:0.0007554668,((((((((((((((((PQ488559:0.0525102603,MH729811.1:0.0722220793)100:0.0233416370,(AB847308.1:0.0748207918,((OM037395.1:0.0020517130,OM037396.1:0.0024471842)95:0.0267681157,test:0.0320421671)100:0.0549853904):0.0059970404)100:0.0187871242,KM516906.1:0.0814615762)73:0.0035522370,((((GU345043.1:0.0236440258,NC_038504.1:0.0225792111)100:0.0478589250,MW795567.1:0.0718817586)100:0.0335611689,(JN167537.1:0.0956325781,(JN167538.1:0.0733100431,MW795566.1:0.0777415199)91:0.0164481698)100:0.0065238254)24:0.0016188523,(OP947206.1:0.0399605816,(OP947207.1:0.0076118583,OP947209.1:0.0134104146)100:0.0315370772)100:0.0759028390)39:0.0031196551)100:0.0188094249,ON644869.1:0.0848532392)100:0.1539899212,MK050105.1:0.2847091449)87:0.0590844062,((((LC549186.1:0.0013091524,LC549187.1:0.0026847683)100:0.0537360568,MZ357113.1:0.0588676439)100:0.0978341041,ON887282.1:0.1167281113)100:0.0373415232,ON887283.1:0.1258685684)100:0.0865585568)53:0.3962246775,(AB847306.1:0.0467501700,AB847309.1:0.0570661473)100:0.1599284041)94:0.0624792516,MG600417.1:0.2084563164)100:0.1240763280,LC573546.1:0.1174653817)100:0.0297261332,((MN450853.1:0.0301156773,MZ868954.1:0.0258227404)100:0.0397383372,MZ542728.1:0.0624063187)100:0.0693164454)89:0.0068907681,((LC225389.1:0.0851905497,(LC549184.1:0.0450668517,MH729812.1:0.0455910163)100:0.0365686262)100:0.0218676864,(OP947211.1:0.0754759592,OQ067397.1:0.0782151360)100:0.0359991428)100:0.0231974654)99:0.0366334678,(AB847305.1:0.0282343599,(LC145325.1:0.0358412398,LC225388.1:0.0485242315)68:0.0073907395)100:0.0608253110)100:0.0164800329,(((AB847307.1:0.0589752956,MT210621.1:0.0559997051)89:0.0070367306,OP947210.1:0.0720631747)98:0.0064156019,LC549185.1:0.0789883560)100:0.0141987625)100:0.0499537972,JX120573.1:0.0318088869)100:0.0125866625,((MG813927.1:0.0014809650,MN450851.1:0.0011680519)100:0.0021874130,MN450855.1:0.0047641545)100:0.0170526631)100:0.0230660118);
+(PQ488551:0.0083763170,((PQ488552:0.0056400330,MN450852.1:0.0034603066)57:0.0008506457,(((PQ488553:0.0029343467,PQ488558:0.0052431033)100:0.0014124283,(PQ488555:0.0045207425,PQ488556:0.0078642851)100:0.0019376689)100:0.0010383133,(PQ488560:0.0029716742,MN450854.1:0.0020908065)57:0.0025253610)100:0.0006711049)98:0.0007547150,((((((((((((((((PQ488559:0.0533384989,MH729811.1:0.0712764910)100:0.0233802633,(AB847308.1:0.0737571601,(OM037395.1:0.0016811603,OM037396.1:0.0028170906)95:0.0791325908)73:0.0073812878)100:0.0185285962,KM516906.1:0.0812324509)100:0.0035662098,((((GU345043.1:0.0236155116,NC_038504.1:0.0225692842)100:0.0477412032,MW795567.1:0.0717297699)100:0.0332891793,(JN167537.1:0.0952980781,(JN167538.1:0.0733546464,MW795566.1:0.0775066794)100:0.0164848388)91:0.0064400139)39:0.0019091898,(OP947206.1:0.0396390503,(OP947207.1:0.0076012874,OP947209.1:0.0134079438)100:0.0317936511)100:0.0754984754)24:0.0030878870)53:0.0187015002,ON644869.1:0.0847626531)87:0.1531957884,MK050105.1:0.2833433769)100:0.0589317770,((((LC549186.1:0.0013082528,LC549187.1:0.0026828083)100:0.0537605874,MZ357113.1:0.0586857353)100:0.0973602163,ON887282.1:0.1165603887)100:0.0371669886,ON887283.1:0.1254363831)100:0.0860415015)94:0.3946631445,(AB847306.1:0.0466676094,AB847309.1:0.0569880497)100:0.1594020475)100:0.0621830948,MG600417.1:0.2077900760)100:0.1235003967,LC573546.1:0.1172458398)100:0.0296244581,((MN450853.1:0.0300977732,MZ868954.1:0.0257856590)100:0.0396877480,MZ542728.1:0.0623246108)100:0.0691788717)99:0.0068729995,((LC225389.1:0.0850424463,(LC549184.1:0.0450199109,MH729812.1:0.0455372095)100:0.0365108802)100:0.0218437499,(OP947211.1:0.0753398097,OQ067397.1:0.0781673505)100:0.0358892822)100:0.0231414855)89:0.0365693952,((AB847305.1:0.0000010000,AB847305.1_Orthohepevirus:0.0000010000):0.0282033490,(LC145325.1:0.0357990964,LC225388.1:0.0484819460)68:0.0073806238)100:0.0607414932)100:0.0164648351,(((AB847307.1:0.0588959468,MT210621.1:0.0559356598)100:0.0070375251,OP947210.1:0.0719732833)89:0.0063977615,LC549185.1:0.0788855153)98:0.0141735720)100:0.0498835474,JX120573.1:0.0317940750)100:0.0125635587,((MG813927.1:0.0014804248,MN450851.1:0.0011672708)100:0.0021868624,MN450855.1:0.0047610423)100:0.0170392596)100:0.0230426222);
 
 ALISIM COMMAND
 --------------
 To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
 
---alisim simulated_MSA -t /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_reoptimised.treefile -m "GTR{1.91164,13.1761,2.55577,0.928197,22.6359}+F{0.192361,0.284945,0.289851,0.232843}+G4{0.206758}" --length 6912
+--alisim simulated_MSA -t /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/AB847305.1_reoptimised.treefile -m "GTR{1.89568,13.0636,2.5329,0.921378,22.3689}+F{0.192358,0.284966,0.289764,0.232912}+G4{0.206417}" --length 6912
 
 To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
 
-iqtree -s /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_updated.fasta --alisim mimicked_MSA
+iqtree -s /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/AB847305.1_updated.fasta --alisim mimicked_MSA
 
 To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
 
-iqtree -s /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/test_updated.fasta --alisim mimicked_MSA --num-alignments 100
+iqtree -s /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/output/AB847305.1_updated.fasta --alisim mimicked_MSA --num-alignments 100
 
 For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
 
 TIME STAMP
 ----------
 
-Date and time: Tue Mar  4 11:34:10 2025
-Total CPU time used: 356.888 seconds (0h:5m:56s)
-Total wall-clock time used: 64.231 seconds (0h:1m:4s)
+Date and time: Tue Mar  4 15:18:31 2025
+Total CPU time used: 363.883 seconds (0h:6m:3s)
+Total wall-clock time used: 65.468 seconds (0h:1m:5s)
 
