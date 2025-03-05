@@ -65,11 +65,11 @@ def run_phylogenetic_placement(output_alignment, existing_tree):
 def infer_global_optimization_tree(output_alignment, output_tree):
     # Construct the IQ-TREE command for optimization as a string
     iqtree_command2 = f"./iqtree2 -seed 2803 -redo -s {output_alignment} -t {output_alignment}_pp.treefile -pre {output_tree} -m GTR+F+G4"
-    st.write(result.stdout)  # Log standard output
-    st.write(result.stderr)   # Log standard error
+
     try:
         result = subprocess.run(iqtree_command2, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
-
+        st.write(result.stdout)  # Log standard output
+        st.write(result.stderr)   # Log standard error
         if result.returncode != 0:
             error_output = result.stderr.strip()
             print(f"iqtree_command2 Error: {error_output}", file=sys.stderr)
