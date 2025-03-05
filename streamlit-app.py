@@ -51,11 +51,6 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
 
-        # Log the command and its output for debugging
-        st.write(f"Command executed: {' '.join(command)}")
-        st.write(f"Standard Output:\n{result.stdout.strip()}")
-        st.write(f"Standard Error:\n{result.stderr.strip()}")
-
         if result.returncode != 0:
             st.error(f"Error inferring new ML tree. Return code: {result.returncode}")
             return None, None, None
