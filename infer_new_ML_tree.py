@@ -33,23 +33,34 @@ def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
 
     return None
 
+def log_file_contents(file_path):
+    if os.path.exists(file_path):
+        with open(file_path) as f:
+            st.write(f"Contents of {file_path}:\n", f.readlines()[:5])  # Log the first few lines
+    else:
+        st.error(f"File not found: {file_path}")
+
+
 def run_phylogenetic_placement(output_alignment, existing_tree):
     # Construct the IQ-TREE command as a string
     iqtree_command = f"./iqtree2 -seed 2803 -nt 20 -redo -s {output_alignment} -g {existing_tree} -pre {output_alignment}_pp -m GTR+F+G4"
     
+    st.write(f"Running command: {iqtree_command}")  # Log the command
+
     try:
-        result = subprocess.run(iqtree_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
-        st.write(result.stdout)  # Log standard output
-        st.write(result.stderr)   # Log standard error
+        result = subprocess.run(iqtree_command, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
+        st.write("IQ-TREE Standard Output:", result.stdout)
+        st.write("IQ-TREE Standard Error:", result.stderr)
 
         if result.returncode != 0:
             error_output = result.stderr.strip()
-            print(f"iqtree_command Error: {error_output}", file=sys.stderr)
+            st.error(f"Failed to perform phylogenetic placement: {error_output}")
             return {"error": f"Failed to perform phylogenetic placement: {error_output}"}
-        return None
-    except subprocess.CalledProcessError as e:
-        print(f"iqtree_command Error: {e}", file=sys.stderr)
-        return {"error": f"Failed to perform phylogenetic placement: {e}"}
+    except Exception as e:
+        st.error(f"Exception during IQ-TREE execution: {str(e)}")
+        return {"error": f"Exception during IQ-TREE execution: {str(e)}"}
+
+    return None
 
 def infer_global_optimization_tree(output_alignment, output_tree):
     # Construct the IQ-TREE command for optimization as a string
@@ -97,6 +108,11 @@ def main():
             json.dump(error, file)
         print(f"Error during mafft: {error}", file=sys.stderr)
         sys.exit(1)
+
+    # Call this function for the necessary files
+    log_file_contents(existing_alignment)
+    log_file_contents(output_alignment)  # Check the output alignment file
+    log_file_contents(existing_tree)
 
     # Run IQ-TREE phylogenetic placement first
     error = run_phylogenetic_placement(output_alignment, existing_tree)
