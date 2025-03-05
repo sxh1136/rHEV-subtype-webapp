@@ -15,20 +15,20 @@ def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
 
             if result.returncode != 0:
                 error_output = result.stderr.strip()
-                st.write(f"MAFFT Error: MAFFT failed with return code {result.returncode}", file=sys.stderr)
-                st.write(f"MAFFT Error (stderr):\n{error_output}", file=sys.stderr)
+                print(f"MAFFT Error: MAFFT failed with return code {result.returncode}", file=sys.stderr)
+                print(f"MAFFT Error (stderr):\n{error_output}", file=sys.stderr)
                 return {"error": f"MAFFT failed with return code {result.returncode}: {error_output}"}
 
         except subprocess.CalledProcessError as e:
-            st.write(f"MAFFT Error (CalledProcessError): {e}", file=sys.stderr)
+            print(f"MAFFT Error (CalledProcessError): {e}", file=sys.stderr)
             return {"error": f"MAFFT Error (CalledProcessError): {e}"}
         except FileNotFoundError as e:
-            st.write(f"MAFFT Error (FileNotFoundError): {e}", file=sys.stderr)
+            print(f"MAFFT Error (FileNotFoundError): {e}", file=sys.stderr)
             return {"error": f"MAFFT Error (FileNotFoundError): {e}"}
 
     # Check that the output_alignment was created:
     if not os.path.exists(output_alignment):
-        st.write(f"ERROR: add_sequence_to_msa: Output alignment file was not created: {output_alignment}", file=sys.stderr)
+        print(f"ERROR: add_sequence_to_msa: Output alignment file was not created: {output_alignment}", file=sys.stderr)
         return {"error": f"add_sequence_to_msa: Output alignment file was not created: {output_alignment}"}
 
     return None
@@ -39,35 +39,38 @@ def run_phylogenetic_placement(output_alignment, existing_tree):
     
     try:
         result = subprocess.run(iqtree_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
+        st.write(result.stdout)  # Log standard output
+        st.write(result.stderr)   # Log standard error
 
         if result.returncode != 0:
             error_output = result.stderr.strip()
-            st.write(f"iqtree_command Error: {error_output}", file=sys.stderr)
+            print(f"iqtree_command Error: {error_output}", file=sys.stderr)
             return {"error": f"Failed to perform phylogenetic placement: {error_output}"}
         return None
     except subprocess.CalledProcessError as e:
-        st.write(f"iqtree_command Error: {e}", file=sys.stderr)
+        print(f"iqtree_command Error: {e}", file=sys.stderr)
         return {"error": f"Failed to perform phylogenetic placement: {e}"}
 
 def infer_global_optimization_tree(output_alignment, output_tree):
     # Construct the IQ-TREE command for optimization as a string
     iqtree_command2 = f"./iqtree2 -seed 2803 -nt 20 -redo --quiet -s {output_alignment} -t {output_alignment}_pp.treefile -pre {output_tree} -m GTR+F+G4"
-    
+    st.write(result.stdout)  # Log standard output
+    st.write(result.stderr)   # Log standard error
     try:
         result = subprocess.run(iqtree_command2, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
 
         if result.returncode != 0:
             error_output = result.stderr.strip()
-            st.write(f"iqtree_command2 Error: {error_output}", file=sys.stderr)
+            print(f"iqtree_command2 Error: {error_output}", file=sys.stderr)
             return {"error": f"Failed to infer optimized tree: {error_output}"}
         return None
     except subprocess.CalledProcessError as e:
-        st.write(f"iqtree_command2 Error: {e}", file=sys.stderr)
+        print(f"iqtree_command2 Error: {e}", file=sys.stderr)
         return {"error": f"Failed to infer optimized tree: {e}"}
 
 def main():
     if len(sys.argv) != 6:
-        st.write("Usage: python script_name.py existing_alignment.fasta new_sequence.fasta existing_tree.treefile output_alignment.fasta output_tree_prefix", file=sys.stderr)
+        print("Usage: python script_name.py existing_alignment.fasta new_sequence.fasta existing_tree.treefile output_alignment.fasta output_tree_prefix", file=sys.stderr)
         sys.exit(1)
 
     existing_alignment = os.path.abspath(sys.argv[1])
