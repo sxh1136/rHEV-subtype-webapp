@@ -4,13 +4,13 @@ import json
 import os
 
 def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
-    # Construct the MAFFT command as a list
-    mafft_command = ["mafft-linux64/mafft.bat", "--thread", "-1", "--quiet", "--add", new_sequence, "--keeplength", existing_alignment]
-    
+    # Construct the MAFFT command as a string
+    mafft_command = f"mafft-linux64/mafft.bat --thread -1 --quiet --add {new_sequence} --keeplength {existing_alignment}"
+
     with open(output_alignment, 'w') as output_file:
         try:
-            # Run the MAFFT command without shell=True
-            result = subprocess.run(mafft_command, check=True, stdout=output_file, stderr=subprocess.PIPE, text=True)
+            # Run the MAFFT command with shell=True
+            result = subprocess.run(mafft_command, check=True, stdout=output_file, stderr=subprocess.PIPE, text=True, shell=True)
 
             if result.returncode != 0:
                 error_output = result.stderr.strip()
@@ -33,11 +33,11 @@ def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
     return None
 
 def run_phylogenetic_placement(output_alignment, existing_tree):
-    # Run IQ-TREE with the guide tree
-    iqtree_command = ["./iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-g", existing_tree, "-pre", f"{output_alignment}_pp", "-m", "GTR+F+G4"]
+    # Construct the IQ-TREE command as a string
+    iqtree_command = f"./iqtree2 -seed 2803 -nt 20 -redo --quiet -s {output_alignment} -g {existing_tree} -pre {output_alignment}_pp -m GTR+F+G4"
     
     try:
-        result = subprocess.run(iqtree_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(iqtree_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
 
         if result.returncode != 0:
             error_output = result.stderr.strip()
@@ -49,11 +49,11 @@ def run_phylogenetic_placement(output_alignment, existing_tree):
         return {"error": f"Failed to perform phylogenetic placement: {e}"}
 
 def infer_global_optimization_tree(output_alignment, output_tree):
-    # Run IQ-TREE with the constraint tree for optimization
-    iqtree_command2 = ["./iqtree2", "-seed", "2803", "-nt", "20", "-redo", "--quiet", "-s", output_alignment, "-t", f"{output_alignment}_pp.treefile", "-pre", output_tree, "-m", "GTR+F+G4"]
+    # Construct the IQ-TREE command for optimization as a string
+    iqtree_command2 = f"./iqtree2 -seed 2803 -nt 20 -redo --quiet -s {output_alignment} -t {output_alignment}_pp.treefile -pre {output_tree} -m GTR+F+G4"
     
     try:
-        result = subprocess.run(iqtree_command2, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(iqtree_command2, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
 
         if result.returncode != 0:
             error_output = result.stderr.strip()
