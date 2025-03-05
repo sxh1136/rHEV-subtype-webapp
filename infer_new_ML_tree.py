@@ -43,7 +43,7 @@ def log_file_contents(file_path):
 
 def run_phylogenetic_placement(output_alignment, existing_tree):
     # Construct the IQ-TREE command as a string
-    iqtree_command = f"./iqtree2 -seed 2803 -nt 20 -redo -s {output_alignment} -g {existing_tree} -pre {output_alignment}_pp -m GTR+F+G4"
+    iqtree_command = f"./iqtree2 -seed 2803 -redo -s {output_alignment} -g {existing_tree} -pre {output_alignment}_pp -m GTR+F+G4"
     
     st.write(f"Running command: {iqtree_command}")  # Log the command
 
@@ -64,7 +64,7 @@ def run_phylogenetic_placement(output_alignment, existing_tree):
 
 def infer_global_optimization_tree(output_alignment, output_tree):
     # Construct the IQ-TREE command for optimization as a string
-    iqtree_command2 = f"./iqtree2 -seed 2803 -nt 20 -redo -s {output_alignment} -t {output_alignment}_pp.treefile -pre {output_tree} -m GTR+F+G4"
+    iqtree_command2 = f"./iqtree2 -seed 2803 -redo -s {output_alignment} -t {output_alignment}_pp.treefile -pre {output_tree} -m GTR+F+G4"
     st.write(result.stdout)  # Log standard output
     st.write(result.stderr)   # Log standard error
     try:
