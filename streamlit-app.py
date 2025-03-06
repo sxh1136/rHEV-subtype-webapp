@@ -13,9 +13,13 @@ def log_error(message):
     st.error(message)
 
 def extract_fasta_header(input_fasta):
-    with open(input_fasta, 'r') as file:
-        for record in SeqIO.parse(file, "fasta"):
-            return record.id
+    try:
+        with open(input_fasta, 'r') as file:
+            for record in SeqIO.parse(file, "fasta"):
+                return record.id
+    except Exception as e:
+        log_error(f"Error extracting FASTA header: {e}")
+        return None
 
 def calculate_p_distance(input_fasta, reference_fasta, output_dir):
     try:
@@ -110,23 +114,56 @@ def main():
     existing_tree = "reference_tree.tree"
     csv_file = "reference_subtypes.csv"
 
-    input_fasta = st.file_uploader("Upload FASTA file", type=["fasta", "fas", "fa"])
+    # Input options: file upload or text area
+    input_option = st.radio("Choose input method:", ("Upload FASTA file", "Paste FASTA sequence"))
 
-    
-    if input_fasta is not None:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".fasta", mode="w+t") as tmp_file:
-            tmp_file.write(input_fasta.getvalue().decode())
-            temp_fasta_path = tmp_file.name
+    if input_option == "Upload FASTA file":
+        input_fasta = st.file_uploader("Upload FASTA file", type=["fasta", "fas", "fa"])
+        fasta_string = None  # Initialize to None
+    else:
+        fasta_string = st.text_area("Paste FASTA sequence", height=200)
+        input_fasta = None  # Initialize to None
+
+    # Add a button to start the analysis
+    start_analysis = st.button("Start Analysis")
+
+    if start_analysis:
+        if input_fasta:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".fasta", mode="w+t") as tmp_file:
+                tmp_file.write(input_fasta.getvalue().decode())
+                temp_fasta_path = tmp_file.name
+        elif fasta_string: #Using the text area input
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".fasta", mode="w+t") as tmp_file:
+                tmp_file.write(fasta_string)
+                temp_fasta_path = tmp_file.name
+        else:
+            st.warning("Please upload a FASTA file or paste a FASTA sequence.")
+            return
 
         query_id = extract_fasta_header(temp_fasta_path)
+        if query_id is None:
+            st.error("Could not extract FASTA header. Please check your input.")
+            try:
+                os.remove(temp_fasta_path)
+            except FileNotFoundError:
+                pass
+            return
 
         st.write("\n**Summary Statistics:**")
         st.write(f"**Query ID:** {query_id}")
         
-        with open(temp_fasta_path, 'r') as file:
-            for record in SeqIO.parse(file, "fasta"):
-                st.write(f"**Query Length:** {len(record.seq)}")
-                break
+        try:
+            with open(temp_fasta_path, 'r') as file:
+                for record in SeqIO.parse(file, "fasta"):
+                    st.write(f"**Query Length:** {len(record.seq)}")
+                    break
+        except Exception as e:
+            log_error(f"Error reading FASTA file: {e}")
+            try:
+                os.remove(temp_fasta_path)
+            except FileNotFoundError:
+                pass
+            return
         
         # Generate dynamic output directory name
         now = datetime.now()
@@ -139,7 +176,7 @@ def main():
         status_placeholder.write("\nCalculating p-distance...")
         for i in range(40):
             progress_bar.progress(i / 100)
-            time.sleep(0.08)
+            time.sleep(0.16)
         p_distance_output = calculate_p_distance(temp_fasta_path, reference_fasta, output_dir)
         if p_distance_output:
             st.success("P-distance calculation completed.")
@@ -151,7 +188,7 @@ def main():
         for i in range(59):
             progress_value = 0.4 + (i / 59) * 0.59
             progress_bar.progress(progress_value)
-            time.sleep(0.08)
+            time.sleep(0.16)
         tree_output, output_alignment, output_tree = infer_new_tree(existing_alignment, temp_fasta_path, query_id, existing_tree, output_dir)
         if tree_output:
             st.success("New ML tree inference completed.")
@@ -211,7 +248,6 @@ def main():
                             log_error(f"Error parsing subtype assignment: {e}")
             
             st.write(f"\n**Subtype Assignment:** {subtype_result['subtype_assignment']}")
-
         except FileNotFoundError as e:
             log_error(f"Error loading results: File not found - {e}")
         except json.JSONDecodeError as e:

@@ -1,1 +1,0 @@
-{"closest_reference_ml": "AB847305.1 Orthohepevirus", "ml_distance": 2e-06, "conflicts": true, "conflict_summary": {"conflicting_taxa": [{"taxon": "MG600417.1", "clade": "II", "subtype": "f"}, {"taxon": "AB847306.1", "clade": "II", "subtype": "c"}], "clades": ["II"], "subtypes": ["c", "b", "f"]}, "subtype_assignment": "Clade=II, Subtype=b"}
