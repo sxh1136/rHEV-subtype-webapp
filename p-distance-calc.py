@@ -1,5 +1,6 @@
 import sys
 import json
+import os  # Import the 'os' module
 from Bio import SeqIO, Align
 
 def calculate_p_distance(seq1, seq2):
@@ -32,7 +33,7 @@ def calculate_p_distance(seq1, seq2):
     p_distance = mismatches / total_positions
     return p_distance
 
-def main(input_fasta, reference_fasta):
+def main(input_fasta, reference_fasta, output_dir):  # Add output_dir argument
     try:
         input_seq = next(SeqIO.parse(input_fasta, "fasta")).seq
         input_id = next(SeqIO.parse(input_fasta, "fasta")).id  # Get the ID of the input sequence
@@ -65,12 +66,17 @@ def main(input_fasta, reference_fasta):
             "below_cutoff": min_distance <= 0.1833
         }
 
-        # Write the output to a file
-        with open("output/p_distance_output.json", "w") as file:
+        # Create the output directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Write the output to a file in the specified directory
+        output_file = os.path.join(output_dir, "p_distance_output.json")
+        with open(output_file, "w") as file:
             json.dump(output, file)
         
         # Write p-distances to a file
-        with open("output/p_distances.txt", "w") as file:
+        p_distances_file = os.path.join(output_dir, "p_distances.txt")
+        with open(p_distances_file, "w") as file:
             for ref_id, distance in p_distances.items():
                 file.write(f"{ref_id}: {distance}\n")
 
@@ -79,11 +85,12 @@ def main(input_fasta, reference_fasta):
         sys.exit(1)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python p_distance.py <input_fasta> <reference_fasta>")
+    if len(sys.argv) != 4:  # Expect 4 arguments now (including output_dir)
+        print("Usage: python p_distance.py <input_fasta> <reference_fasta> <output_dir>")
         sys.exit(1)
 
     input_fasta = sys.argv[1]
     reference_fasta = sys.argv[2]
-    
-    main(input_fasta, reference_fasta)
+    output_dir = sys.argv[3]  # Get output directory from command line
+
+    main(input_fasta, reference_fasta, output_dir)  # Pass output_dir to main function

@@ -5,7 +5,7 @@ import csv
 from collections import Counter
 import json
 
-def main(input_newick, predefined_label, csv_file):
+def main(input_newick, predefined_label, csv_file, output_dir):
     # Check if the input files exist
     if not os.path.isfile(input_newick):
         return {"error": f"File '{input_newick}' does not exist."}
@@ -106,23 +106,29 @@ def main(input_newick, predefined_label, csv_file):
         "subtype_assignment": f"Clade={most_common_clade}, Subtype={most_common_subtype}" if most_common_clade and most_common_subtype else "Clade=Unknown, Subtype=Unknown"
     }
 
-    # Write the output to a file
-    with open("output/subtype_output.json", "w") as file:
+    # Create the output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Write the output to a file in the specified directory
+    output_file = os.path.join(output_dir, "subtype_output.json")
+    with open(output_file, "w") as file:
         json.dump(output, file)
 
     # Write patristic distances to a file
-    with open("output/patristic_distances.txt", "w") as file:
+    distances_file = os.path.join(output_dir, "patristic_distances.txt")
+    with open(distances_file, "w") as file:
         file.write(f"Patristic Distances from {predefined_label}:\n")
         for dist, label in distance_list:
             file.write(f"{label}: {dist}\n")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python script.py <input_newick> <predefined_label> <csv_file>")
+    if len(sys.argv) != 5:
+        print("Usage: python script.py <input_newick> <predefined_label> <csv_file> <output_dir>")
         sys.exit(1)
 
     input_newick = sys.argv[1]
     predefined_label = sys.argv[2]
     csv_file = sys.argv[3]
-    
-    main(input_newick, predefined_label, csv_file)
+    output_dir = sys.argv[4]
+
+    main(input_newick, predefined_label, csv_file, output_dir)

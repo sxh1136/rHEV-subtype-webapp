@@ -7,6 +7,7 @@ import tempfile
 from Bio import SeqIO
 import time
 import zipfile
+from datetime import datetime
 
 def log_error(message):
     st.error(message)
@@ -16,9 +17,9 @@ def extract_fasta_header(input_fasta):
         for record in SeqIO.parse(file, "fasta"):
             return record.id
 
-def calculate_p_distance(input_fasta, reference_fasta):
+def calculate_p_distance(input_fasta, reference_fasta, output_dir):
     try:
-        command = [sys.executable, "p-distance-calc.py", input_fasta, reference_fasta]
+        command = [sys.executable, "p-distance-calc.py", input_fasta, reference_fasta, output_dir]
         result = subprocess.run(command, check=True, capture_output=True, text=True)
 
         if result.returncode != 0:
@@ -27,11 +28,11 @@ def calculate_p_distance(input_fasta, reference_fasta):
             return None
 
         try:
-            with open("output/p_distance_output.json", "r") as file:
+            with open(os.path.join(output_dir, "p_distance_output.json"), "r") as file:
                 result = json.load(file)
             return result
         except FileNotFoundError:
-            log_error("Error: p_distance_output.json not found in output directory.")
+            log_error(f"Error: p_distance_output.json not found in {output_dir} directory.")
             return None
         except json.JSONDecodeError:
             log_error("Error: Could not decode JSON from p_distance_output.json")
@@ -46,7 +47,7 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
     output_tree = os.path.join(output_dir, f"{query_id}_reoptimised")
     script_path = "infer_new_ML_tree.py"
 
-    command = [sys.executable, script_path, existing_alignment, new_sequence, existing_tree, output_alignment, output_tree]
+    command = [sys.executable, script_path, existing_alignment, new_sequence, existing_tree, output_alignment, output_tree, output_dir]
 
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
@@ -75,8 +76,8 @@ def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, ou
         st.error(f"Error: {e.stderr}")
         return None, None, None
 
-def infer_subtype(input_newick, predefined_label, csv_file):
-    command = [sys.executable, "ML_patristic-dist_calc.py", input_newick, predefined_label, csv_file]
+def infer_subtype(input_newick, predefined_label, csv_file, output_dir):
+    command = [sys.executable, "ML_patristic-dist_calc.py", input_newick, predefined_label, csv_file, output_dir]
 
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
@@ -87,11 +88,11 @@ def infer_subtype(input_newick, predefined_label, csv_file):
             return None
 
         try:
-            with open("output/subtype_output.json", "r") as file:
+            with open(os.path.join(output_dir, "subtype_output.json"), "r") as file:
                 result = json.load(file)
             return result
         except FileNotFoundError:
-            log_error("Error: subtype_output.json not found in output directory.")
+            log_error(f"Error: subtype_output.json not found in {output_dir} directory.")
             return None
         except json.JSONDecodeError:
             log_error("Error: Could not decode JSON from subtype_output.json")
@@ -111,7 +112,6 @@ def main():
 
     input_fasta = st.file_uploader("Upload FASTA file", type=["fasta", "fas", "fa"])
 
-    output_dir = "output"
     
     if input_fasta is not None:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".fasta", mode="w+t") as tmp_file:
@@ -128,16 +128,19 @@ def main():
                 st.write(f"**Query Length:** {len(record.seq)}")
                 break
         
+        # Generate dynamic output directory name
+        now = datetime.now()
+        timestamp = now.strftime("%Y%m%d")
+        output_dir = f"rHEV_subtyping_results_{query_id}_{timestamp}"
         os.makedirs(output_dir, exist_ok=True)
         
         progress_bar = st.progress(0)
         status_placeholder = st.empty()
-
         status_placeholder.write("\nCalculating p-distance...")
         for i in range(40):
             progress_bar.progress(i / 100)
-            time.sleep(0.8)
-        p_distance_output = calculate_p_distance(temp_fasta_path, reference_fasta)
+            time.sleep(0.08)
+        p_distance_output = calculate_p_distance(temp_fasta_path, reference_fasta, output_dir)
         if p_distance_output:
             st.success("P-distance calculation completed.")
         else:
@@ -148,7 +151,7 @@ def main():
         for i in range(59):
             progress_value = 0.4 + (i / 59) * 0.59
             progress_bar.progress(progress_value)
-            time.sleep(0.8)
+            time.sleep(0.08)
         tree_output, output_alignment, output_tree = infer_new_tree(existing_alignment, temp_fasta_path, query_id, existing_tree, output_dir)
         if tree_output:
             st.success("New ML tree inference completed.")
@@ -159,7 +162,7 @@ def main():
         status_placeholder.write("\nInferring subtype...")
         input_newick = f"{output_tree}.treefile"
         predefined_label = query_id
-        subtype_output = infer_subtype(input_newick, predefined_label, csv_file)
+        subtype_output = infer_subtype(input_newick, predefined_label, csv_file, output_dir)
         if subtype_output:
             st.success("Subtype inference completed.")
             progress_bar.progress(100)
@@ -171,11 +174,11 @@ def main():
         status_placeholder.write("\nAnalysis completed!")
 
         try:
-            with open("output/p_distance_output.json", "r") as file:
+            with open(os.path.join(output_dir, "p_distance_output.json"), "r") as file:
                 p_distance_result = json.load(file)
-            with open("output/ml_tree_output.json", "r") as file:
+            with open(os.path.join(output_dir, "ml_tree_output.json"), "r") as file:
                 tree_result = json.load(file)
-            with open("output/subtype_output.json", "r") as file:
+            with open(os.path.join(output_dir, "subtype_output.json"), "r") as file:
                 subtype_result = json.load(file)
 
             st.write("\n**Results Summary**")
@@ -232,17 +235,18 @@ def main():
                 destination_path = os.path.join(iqtree_dir, filename)
                 os.rename(file_path, destination_path)
         
-        with zipfile.ZipFile('output.zip', 'w', zipfile.ZIP_DEFLATED) as zip_file:
-            for root, dirs, files in os.walk('output'):
+        zip_filename = f"{output_dir}.zip"
+        with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+            for root, dirs, files in os.walk(output_dir):
                 for file in files:
                     file_path = os.path.join(root, file)
-                    relative_path = os.path.relpath(file_path, start=os.path.dirname('output'))
+                    relative_path = os.path.relpath(file_path, start=output_dir)
                     zip_file.write(file_path, relative_path)
 
-        with open("output.zip", "rb") as file:
+        with open(zip_filename, "rb") as file:
             zip_data = file.read()
 
-        st.download_button("Download Output", zip_data, file_name="output.zip")
+        st.download_button("Download Output", zip_data, file_name=zip_filename)
 
 if __name__ == "__main__":
     main()

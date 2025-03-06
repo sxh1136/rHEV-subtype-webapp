@@ -1,0 +1,143 @@
+IQ-TREE multicore version 2.4.0 for Linux x86 64-bit built Feb  7 2025
+Developed by Bui Quang Minh, Nguyen Lam Tung, Olga Chernomor, Heiko Schmidt,
+Dominik Schrempf, Michael Woodhams, Ly Trong Nhan, Thomas Wong
+
+Host:    DT-ASUS (AVX2, FMA3, 125 GB RAM)
+Command: ./iqtree2 -seed 2803 -redo -s /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/AB847305.1_20250306_121059/AB847305.1_updated.fasta -t /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/AB847305.1_20250306_121059/AB847305.1_updated.fasta_pp.treefile -pre /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/AB847305.1_20250306_121059/AB847305.1_reoptimised -m GTR+F+G4
+Seed:    2803 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Thu Mar  6 12:11:29 2025
+Kernel:  AVX+FMA - 1 threads (24 CPU cores detected)
+
+HINT: Use -nt option to specify number of threads because your CPU has 24 cores!
+HINT: -nt AUTO will automatically determine the best number of threads to use.
+
+Reading alignment file /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/AB847305.1_20250306_121059/AB847305.1_updated.fasta ... Fasta format detected
+Reading fasta file: done in 0.00179114 secs using 99.99% CPU
+NOTE: Change sequence name 'AB847305.1 Orthohepevirus A DNA, complete genome, isolate: ratIDE079F' -> AB847305.1_Orthohepevirus
+Alignment most likely contains DNA/RNA sequences
+WARNING: 3 sites contain only gaps or ambiguous characters.
+Alignment has 55 sequences with 6912 columns, 3125 distinct patterns
+2853 parsimony-informative, 358 singleton sites, 3701 constant sites
+                           Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 0.000163262 secs
+   1  PQ488551                     1.72%    passed     71.85%
+   2  PQ488552                     1.46%    passed     73.94%
+   3  PQ488553                     1.35%    passed     71.23%
+   4  PQ488555                     2.86%    passed     59.47%
+   5  PQ488556                     1.35%    passed     80.34%
+   6  PQ488558                     1.43%    passed     62.32%
+   7  PQ488559                     1.20%    passed     73.10%
+   8  PQ488560                     1.35%    passed     76.15%
+   9  AB847305.1                   0.80%    passed     99.38%
+  10  AB847306.1                   0.84%    passed     30.84%
+  11  AB847307.1                   1.35%    passed     93.47%
+  12  AB847308.1                   1.13%    passed     92.91%
+  13  AB847309.1                   1.01%    passed     36.11%
+  14  GU345043.1                   1.04%    passed     88.87%
+  15  JN167537.1                   1.14%    passed     47.81%
+  16  JN167538.1                   1.13%    passed     74.41%
+  17  JX120573.1                   1.35%    passed     78.16%
+  18  KM516906.1                   1.13%    passed     73.21%
+  19  LC145325.1                   0.97%    passed     98.62%
+  20  LC225388.1                   0.81%    passed     93.24%
+  21  LC225389.1                   0.78%    passed     90.71%
+  22  LC549184.1                   0.74%    passed     97.46%
+  23  LC549185.1                   1.36%    passed     96.34%
+  24  LC549186.1                   0.87%    passed     89.49%
+  25  LC549187.1                   0.87%    passed     87.81%
+  26  LC573546.1                   0.58%    passed     96.85%
+  27  MG600417.1                   0.87%    passed     96.16%
+  28  MG813927.1                   1.30%    passed     83.09%
+  29  MH729811.1                   2.21%    passed     53.44%
+  30  MH729812.1                   2.08%    passed     84.74%
+  31  MK050105.1                   1.04%    passed     67.16%
+  32  MN450851.1                   1.30%    passed     80.50%
+  33  MN450852.1                   1.35%    passed     80.15%
+  34  MN450853.1                   0.71%    passed     95.61%
+  35  MN450854.1                   1.35%    passed     70.88%
+  36  MN450855.1                   1.30%    passed     85.26%
+  37  MT210621.1                   1.36%    passed     97.88%
+  38  MW795566.1                   1.19%    passed     17.40%
+  39  MW795567.1                   1.17%    passed     21.33%
+  40  MZ357113.1                   1.04%    passed     41.04%
+  41  MZ542728.1                   0.69%    passed     95.68%
+  42  MZ868954.1                   0.69%    passed     93.58%
+  43  NC_038504.1                  1.04%    passed     75.78%
+  44  OM037395.1                   4.51%    passed     66.45%
+  45  OM037396.1                   4.48%    passed     67.78%
+  46  ON644869.1                   2.08%    passed     85.40%
+  47  ON887282.1                   2.69%    passed     16.71%
+  48  ON887283.1                   2.69%    passed     95.85%
+  49  OP947206.1                   1.13%    passed     88.99%
+  50  OP947207.1                   1.13%    passed     96.22%
+  51  OP947209.1                   1.13%    passed     98.97%
+  52  OP947210.1                   4.08%    passed     89.95%
+  53  OP947211.1                   0.78%    passed     94.25%
+  54  OQ067397.1                   0.65%    passed     91.32%
+  55  AB847305.1_Orthohepevirus    0.80%    passed     99.38%
+****  TOTAL                        1.41%  0 sequences failed composition chi2 test (p-value<5%; df=3)
+NOTE: AB847305.1_Orthohepevirus is identical to AB847305.1 but kept for subsequent analysis
+Reading input tree file /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/AB847305.1_20250306_121059/AB847305.1_updated.fasta_pp.treefile ...
+
+NOTE: 22 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -110684.990
+2. Current log-likelihood: -95260.368
+3. Current log-likelihood: -94811.071
+4. Current log-likelihood: -94790.212
+5. Current log-likelihood: -94788.781
+6. Current log-likelihood: -94788.578
+Optimal log-likelihood: -94788.558
+Rate parameters:  A-C: 1.91426  A-G: 13.17023  A-T: 2.56639  C-G: 0.93033  C-T: 22.54797  G-T: 1.00000
+Base frequencies:  A: 0.192  C: 0.285  G: 0.290  T: 0.233
+Gamma shape alpha: 0.207
+Parameters optimization took 6 rounds (1.091 sec)
+Wrote distance file to... 
+
+Do NNI search on 1 best initial trees
+Finish initializing candidate tree set (1)
+Current best tree score: -94788.558 / CPU time: 0.058
+Number of iterations: 1
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 8: -94787.600
+Iteration 10 / LogL: -94787.708 / Time: 0h:0m:3s
+Iteration 20 / LogL: -94820.786 / Time: 0h:0m:5s
+Iteration 30 / LogL: -94790.819 / Time: 0h:0m:8s (0h:0m:22s left)
+Iteration 40 / LogL: -94788.590 / Time: 0h:0m:10s (0h:0m:18s left)
+Iteration 50 / LogL: -94787.654 / Time: 0h:0m:13s (0h:0m:15s left)
+Iteration 60 / LogL: -94788.999 / Time: 0h:0m:15s (0h:0m:12s left)
+Iteration 70 / LogL: -94787.821 / Time: 0h:0m:17s (0h:0m:9s left)
+Iteration 80 / LogL: -94802.164 / Time: 0h:0m:20s (0h:0m:7s left)
+Iteration 90 / LogL: -94788.679 / Time: 0h:0m:22s (0h:0m:4s left)
+Iteration 100 / LogL: -94787.605 / Time: 0h:0m:25s (0h:0m:2s left)
+TREE SEARCH COMPLETED AFTER 109 ITERATIONS / Time: 0h:0m:27s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -94787.600
+Optimal log-likelihood: -94787.598
+Rate parameters:  A-C: 1.90682  A-G: 13.17682  A-T: 2.55558  C-G: 0.92999  C-T: 22.55131  G-T: 1.00000
+Base frequencies:  A: 0.192  C: 0.285  G: 0.290  T: 0.233
+Gamma shape alpha: 0.207
+Parameters optimization took 1 rounds (0.056 sec)
+BEST SCORE FOUND : -94787.598
+Total tree length: 4.841
+
+Total number of iterations: 109
+CPU time used for tree search: 26.110 sec (0h:0m:26s)
+Wall-clock time used for tree search: 26.224 sec (0h:0m:26s)
+Total CPU time used: 27.259 sec (0h:0m:27s)
+Total wall-clock time used: 27.377 sec (0h:0m:27s)
+
+Analysis results written to: 
+  IQ-TREE report:                /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/AB847305.1_20250306_121059/AB847305.1_reoptimised.iqtree
+  Maximum-likelihood tree:       /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/AB847305.1_20250306_121059/AB847305.1_reoptimised.treefile
+  Screen log file:               /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/AB847305.1_20250306_121059/AB847305.1_reoptimised.log
+
+Date and Time: Thu Mar  6 12:11:56 2025

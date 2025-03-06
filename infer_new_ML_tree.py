@@ -79,17 +79,7 @@ def infer_global_optimization_tree(output_alignment, output_tree):
         print(f"iqtree_command2 Error: {e}", file=sys.stderr)
         return {"error": f"Failed to infer optimized tree: {e}"}
 
-def main():
-    if len(sys.argv) != 6:
-        print("Usage: python script_name.py existing_alignment.fasta new_sequence.fasta existing_tree.treefile output_alignment.fasta output_tree_prefix", file=sys.stderr)
-        sys.exit(1)
-
-    existing_alignment = os.path.abspath(sys.argv[1])
-    new_sequence = os.path.abspath(sys.argv[2])
-    existing_tree = os.path.abspath(sys.argv[3])
-    output_alignment = os.path.abspath(sys.argv[4])
-    output_tree = os.path.abspath(sys.argv[5])
-
+def main(existing_alignment, new_sequence, existing_tree, output_alignment, output_tree, output_dir):
     # Check file existence *before* doing anything else
     if not os.path.exists(existing_alignment):
         print(f"ERROR: Existing alignment file not found: {existing_alignment}", file=sys.stderr)
@@ -104,7 +94,8 @@ def main():
     # Add new sequence to existing alignment
     error = add_sequence_to_msa(existing_alignment, new_sequence, output_alignment)
     if error:
-        with open("output/ml_tree_error.json", "w") as file:
+        error_file_path = os.path.join(output_dir, "ml_tree_error.json")
+        with open(error_file_path, "w") as file:
             json.dump(error, file)
         print(f"Error during mafft: {error}", file=sys.stderr)
         sys.exit(1)
@@ -117,7 +108,8 @@ def main():
     # Run IQ-TREE phylogenetic placement first
     error = run_phylogenetic_placement(output_alignment, existing_tree)
     if error:
-        with open("output/ml_tree_error.json", "w") as file:
+        error_file_path = os.path.join(output_dir, "ml_tree_error.json")
+        with open(error_file_path, "w") as file:
             json.dump(error, file)
         print(f"Error during iqtree_command: {error}", file=sys.stderr)
         sys.exit(1)
@@ -125,7 +117,8 @@ def main():
     # Run IQ-TREE with the constraint tree for optimization
     error = infer_global_optimization_tree(output_alignment, output_tree)
     if error:
-        with open("output/ml_tree_error.json", "w") as file:
+        error_file_path = os.path.join(output_dir, "ml_tree_error.json")
+        with open(error_file_path, "w") as file:
             json.dump(error, file)
         print(f"Error during iqtree_command2: {error}", file=sys.stderr)
         sys.exit(1)
@@ -137,9 +130,20 @@ def main():
     }
 
     # Write the output to a file
-    output_json_path = os.path.join(os.path.dirname(output_alignment), "ml_tree_output.json")
+    output_json_path = os.path.join(output_dir, "ml_tree_output.json")
     with open(output_json_path, "w") as file:
         json.dump(output, file)
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 7:
+        print("Usage: python script_name.py existing_alignment.fasta new_sequence.fasta existing_tree.treefile output_alignment.fasta output_tree_prefix output_dir", file=sys.stderr)
+        sys.exit(1)
+
+    existing_alignment = os.path.abspath(sys.argv[1])
+    new_sequence = os.path.abspath(sys.argv[2])
+    existing_tree = os.path.abspath(sys.argv[3])
+    output_alignment = os.path.abspath(sys.argv[4])
+    output_tree = os.path.abspath(sys.argv[5])
+    output_dir = os.path.abspath(sys.argv[6])
+
+    main(existing_alignment, new_sequence, existing_tree, output_alignment, output_tree, output_dir)
