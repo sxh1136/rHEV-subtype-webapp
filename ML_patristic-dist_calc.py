@@ -2,124 +2,127 @@ import sys
 import dendropy
 import os
 import csv
-from collections import Counter
 import json
 
 def main(input_newick, predefined_label, csv_file, output_dir):
-    # Check if the input files exist
-    if not os.path.isfile(input_newick):
-        return {"error": f"File '{input_newick}' does not exist."}
-    if not os.path.isfile(csv_file):
-        return {"error": f"File '{csv_file}' does not exist."}
-
     try:
+        # Check if the input files exist
+        if not os.path.isfile(input_newick):
+            print(f"Error: File '{input_newick}' does not exist.")
+            return
+        if not os.path.isfile(csv_file):
+            print(f"Error: File '{csv_file}' does not exist.")
+            return
+
         # Load the tree from the Newick file
         tree = dendropy.Tree.get(
             path=input_newick,
-            schema="newick"
+            schema="newick",
+            preserve_underscores=True
         )
-    except Exception as e:
-        return {"error": f"Failed to load tree from '{input_newick}': {e}"}
+        print("Tree loaded successfully.")
 
-    # Create a phylogenetic distance matrix
-    pdc = tree.phylogenetic_distance_matrix()
+        # Create a phylogenetic distance matrix
+        pdc = tree.phylogenetic_distance_matrix()
+        print("Distance matrix created.")
 
-    # Find the predefined taxon
-    predefined_taxon = None
-    for taxon in tree.taxon_namespace:
-        if taxon.label == predefined_label:
-            predefined_taxon = taxon
-            break
+         # Print the distance matrix
+        print("Distance Matrix:")
+        for taxon1 in tree.taxon_namespace:
+            for taxon2 in tree.taxon_namespace:
+                if taxon1 != taxon2:
+                    distance = pdc(taxon1, taxon2)
+                    print(f"Distance from {taxon1.label} to {taxon2.label}: {distance}")
 
-    if predefined_taxon is None:
-        return {"error": f"Taxon '{predefined_label}' not found in the tree."}
 
-    # List to store distances and corresponding taxa
-    distance_list = []
+        # Find the predefined taxon
+        predefined_taxon = None
+        for taxon in tree.taxon_namespace:
+            if taxon.label == predefined_label:
+                predefined_taxon = taxon
+                break
 
-    # Calculate distances from the predefined taxon to all other taxa
-    for taxon in tree.taxon_namespace:
-        if taxon != predefined_taxon:  # Skip the predefined taxon itself
-            distance = pdc(predefined_taxon, taxon)
-            distance_list.append((distance, taxon.label))
+        if predefined_taxon is None:
+            print(f"Error: Taxon '{predefined_label}' not found in the tree.")
+            return
 
-    # Sort the list by distance (first element of tuple)
-    distance_list.sort(key=lambda x: x[0])
+        # List to store distances and corresponding taxa
+        distance_list = []
 
-    # ML nucleotide threshold
-    threshold = 0.5585
+        # Calculate distances from the predefined taxon to all other taxa
+        for taxon in tree.taxon_namespace:
+            if taxon != predefined_taxon:  # Skip the predefined taxon itself
+                distance = pdc(predefined_taxon, taxon)
+                print(f"Distance from {predefined_taxon.label} to {taxon.label}: {distance}")
+                distance_list.append((distance, taxon.label))
 
-    # Filter distances under the threshold
-    filtered_distances = [(dist, label) for dist, label in distance_list if dist < threshold]
+        print(f"Distance list populated with {len(distance_list)} entries.")
 
-    # Read the CSV file
-    csv_data = {}
-    with open(csv_file, mode='r', encoding='utf-8-sig') as file:
-        reader = csv.DictReader(file, delimiter=',')
-        for row in reader:
-            csv_data[row['Name']] = {'Clade': row['Clade'], 'Subtype': row['Subtype']}
+        # Sort the list by distance (first element of tuple)
+        distance_list.sort(key=lambda x: x[0])
+        print("Distance list sorted.")
 
-    # Check for conflicting clades and subtypes
-    clades = []
-    subtypes = []
-    conflicting_taxa_info = []
-    for dist, label in filtered_distances:
-        if label in csv_data:
-            clades.append(csv_data[label]['Clade'])
-            subtypes.append(csv_data[label]['Subtype'])
-            if len(set(clades)) > 1 or len(set(subtypes)) > 1:
-                conflicting_taxa_info.append({
-                    'taxon': label,
-                    'clade': csv_data[label]['Clade'],
-                    'subtype': csv_data[label]['Subtype']
-                })
-
-    conflicts = False
-    most_common_clade = None
-    most_common_subtype = None
-    if clades and subtypes:
-        if len(set(clades)) > 1 or len(set(subtypes)) > 1:
-            conflicts = True
-            # In case of conflicts, you could still provide a most common clade/subtype
-            # or handle it as "Not determined" in your output
-            most_common_clade = Counter(clades).most_common(1)[0][0]
-            most_common_subtype = Counter(subtypes).most_common(1)[0][0]
-        else:
-            most_common_clade = Counter(clades).most_common(1)[0][0]
-            most_common_subtype = Counter(subtypes).most_common(1)[0][0]
-
-    # Extract closest label after processing filtered distances
-    closest_label = None
-    if filtered_distances:  # Only try to get the label if filtered_distances is not empty
-        closest_label = filtered_distances[0][1]  # First element's label
-
-    # Prepare output dictionary
-    output = {
-        "closest_reference_ml": closest_label,
-        "ml_distance": filtered_distances[0][0] if filtered_distances else None,
-        "conflicts": conflicts,
-        "conflict_summary": {
-            "conflicting_taxa": [{"taxon": taxon['taxon'], "clade": taxon['clade'], "subtype": taxon['subtype']} for taxon in conflicting_taxa_info],
-            "clades": list(set(clades)),
-            "subtypes": list(set(subtypes))
-        },
-        "subtype_assignment": f"Clade={most_common_clade}, Subtype={most_common_subtype}" if most_common_clade and most_common_subtype else "Clade=Unknown, Subtype=Unknown"
-    }
-
-    # Create the output directory if it doesn't exist
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Write the output to a file in the specified directory
-    output_file = os.path.join(output_dir, "subtype_output.json")
-    with open(output_file, "w") as file:
-        json.dump(output, file)
-
-    # Write patristic distances to a file
-    distances_file = os.path.join(output_dir, "patristic_distances.txt")
-    with open(distances_file, "w") as file:
-        file.write(f"Patristic Distances from {predefined_label}:\n")
+        print("Sorted distance list:")
         for dist, label in distance_list:
-            file.write(f"{label}: {dist}\n")
+            print(f"{label}: {dist}")
+
+        # ML nucleotide threshold
+        clade_threshold = 1.0227
+        subtype_threshold = 0.5586
+
+        # Get the closest reference
+        closest_distance, closest_label = distance_list[0]
+
+        # Read the CSV file
+        csv_data = {}
+        with open(csv_file, mode='r', encoding='utf-8-sig') as file:
+            reader = csv.DictReader(file, delimiter=',')
+            for row in reader:
+                csv_data[row['Name']] = {'Clade': row['Clade'], 'Subtype': row['Subtype']}
+
+        print("CSV data loaded.")
+
+        # Determine clade and subtype of the closest reference
+        clade_assignment = "Not-determined"
+        subtype_assignment = "Not-determined"
+        if closest_label in csv_data:
+            if closest_distance <= clade_threshold:
+                clade_assignment = csv_data[closest_label]['Clade']
+            if closest_distance <= subtype_threshold:
+                subtype_assignment = csv_data[closest_label]['Subtype']
+
+        print("Subtype and clade assignments determined.")
+
+        # Prepare output dictionary
+        output = {
+            "closest_reference_ml": closest_label,
+            "ml_distance": closest_distance,
+            "below_cutoff": closest_distance < subtype_threshold,
+            "clade_assignment": clade_assignment,
+            "subtype_assignment": subtype_assignment
+        }
+
+        # Create the output directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Write the output to a file in the specified directory
+        output_file = os.path.join(output_dir, "subtype_output.json")
+        with open(output_file, "w") as file:
+            json.dump(output, file)
+
+        print(f"Output written to {output_file}.")
+
+        # Write patristic distances to a file
+        distances_file = os.path.join(output_dir, "patristic_distances.txt")
+        with open(distances_file, "w") as file:
+            file.write(f"Patristic Distances from {predefined_label}:\n")
+            for dist, label in distance_list:
+                file.write(f"{label}: {dist}\n")
+
+        print(f"Patristic distances written to {distances_file}.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:

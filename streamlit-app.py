@@ -8,6 +8,7 @@ from Bio import SeqIO
 import time
 import zipfile
 from datetime import datetime
+import pandas as pd
 
 def log_error(message):
     st.error(message)
@@ -116,7 +117,6 @@ def main():
 
     # Input options: file upload or text area
     input_option = st.radio("Choose input method:", ("Upload FASTA file", "Paste FASTA sequence"))
-
     if input_option == "Upload FASTA file":
         input_fasta = st.file_uploader("Upload FASTA file", type=["fasta", "fas", "fa"])
         fasta_string = None  # Initialize to None
@@ -176,7 +176,7 @@ def main():
         status_placeholder.write("\nCalculating p-distance...")
         for i in range(40):
             progress_bar.progress(i / 100)
-            time.sleep(0.16)
+            time.sleep(0.3)
         p_distance_output = calculate_p_distance(temp_fasta_path, reference_fasta, output_dir)
         if p_distance_output:
             st.success("P-distance calculation completed.")
@@ -188,7 +188,7 @@ def main():
         for i in range(59):
             progress_value = 0.4 + (i / 59) * 0.59
             progress_bar.progress(progress_value)
-            time.sleep(0.16)
+            time.sleep(0.3)
         tree_output, output_alignment, output_tree = infer_new_tree(existing_alignment, temp_fasta_path, query_id, existing_tree, output_dir)
         if tree_output:
             st.success("New ML tree inference completed.")
@@ -220,34 +220,29 @@ def main():
 
             st.write("\n**Results Summary**")
 
-            col1, col2 = st.columns(2)
+            # Prepare data for the table, making metrics the column titles
+            table_data = {
+                "Closest Reference by P-Distance (value)": [
+                    f"{p_distance_result['closest_reference']} ({p_distance_result['p_distance']:.4f})"
+                ],
+                "Closest Reference by ML Patristic Distance (value)": [
+                    f"{subtype_result['closest_reference_ml']} ({subtype_result['ml_distance']:.4f})"
+                ],
+                "Clade Assignment": [
+                    subtype_result['clade_assignment']
+                ],
+                "Subtype Assignment": [
+                    subtype_result['subtype_assignment']
+                ]
+            }
+        
+            # Create a Pandas DataFrame
+            df = pd.DataFrame(table_data)
 
-            with col1:
-                st.write("**P-Distance Results**")
-                st.write(f"* **Closest Reference:** {p_distance_result['closest_reference']} ({p_distance_result['p_distance']:.4f})")
-                st.write(f"* **Below Cutoff:** {p_distance_result['below_cutoff']}")
-
-            with col2:
-                st.write("**ML Patristic Distance Results**")
-                st.write(f"* **Closest Reference:** {subtype_result['closest_reference_ml']} ({subtype_result['ml_distance']:.4f})")
-                st.write(f"* **Conflicts:** {subtype_result['conflicts']}")
-
-            if subtype_result['conflicts']:
-                with st.expander("Conflict Summary"):
-                    if subtype_result['subtype_assignment'] == "Not determined":
-                        st.write("* **Consensus Assignment:** Not determined due to conflicts.")
-                    else:
-                        try:
-                            conflicting_taxa_info = []
-                            for taxon in subtype_result['conflict_summary']['conflicting_taxa']:
-                                conflicting_taxa_info.append(f"{taxon['taxon']} (Clade {taxon['clade']} Subtype {taxon['subtype']})")
-                            st.write(f"* **Conflicting Taxa:** {', '.join(conflicting_taxa_info)}")
-                            st.write(f"* **Conflicting Clades:** {', '.join(subtype_result['conflict_summary']['clades'])}")
-                            st.write(f"* **Conflicting Subtypes:** {', '.join(subtype_result['conflict_summary']['subtypes'])}")
-                        except IndexError as e:
-                            log_error(f"Error parsing subtype assignment: {e}")
+            # Display the table using Streamlit
+            st.table(df)
+            st.write("Note, clade and subtype assignments are only determined if ML patristic distance is below cutoff values.")
             
-            st.write(f"\n**Subtype Assignment:** {subtype_result['subtype_assignment']}")
         except FileNotFoundError as e:
             log_error(f"Error loading results: File not found - {e}")
         except json.JSONDecodeError as e:
@@ -284,5 +279,6 @@ def main():
 
         st.download_button("Download Output", zip_data, file_name=zip_filename)
 
+        st.balloons()
 if __name__ == "__main__":
     main()
