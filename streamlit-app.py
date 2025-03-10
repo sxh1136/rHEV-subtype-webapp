@@ -107,6 +107,7 @@ def infer_subtype(input_newick, predefined_label, csv_file, output_dir):
         return None
 
 def main():
+    st.image("header.jpg")
     st.title("Rat Hepatitis E Subtyping Tool v1.0")
     st.header("Sridhar Group")
     
@@ -241,7 +242,7 @@ def main():
 
             # Display the table using Streamlit
             st.table(df)
-            st.write("Note, clade and subtype assignments are only determined if ML patristic distance is below cutoff values.")
+            st.write("**Note**: clade and subtype assignments are only determined if ML patristic distance is below cutoff values.")
             
         except FileNotFoundError as e:
             log_error(f"Error loading results: File not found - {e}")
