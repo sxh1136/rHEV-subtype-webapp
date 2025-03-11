@@ -278,7 +278,12 @@ def main():
         with open(zip_filename, "rb") as file:
             zip_data = file.read()
 
-        st.download_button("Download Output", zip_data, file_name=zip_filename)
+        @st.fragment
+        def download_fragment():
+            st.download_button("Download Output", zip_data, file_name=zip_filename)
+
+        download_fragment()
+        
 
         st.balloons()
 if __name__ == "__main__":

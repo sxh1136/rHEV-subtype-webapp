@@ -1,0 +1,157 @@
+IQ-TREE multicore version 2.4.0 for Linux x86 64-bit built Feb  7 2025
+Developed by Bui Quang Minh, Nguyen Lam Tung, Olga Chernomor, Heiko Schmidt,
+Dominik Schrempf, Michael Woodhams, Ly Trong Nhan, Thomas Wong
+
+Host:    DT-ASUS (AVX2, FMA3, 125 GB RAM)
+Command: ./iqtree2 -seed 2803 -redo -s /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/rHEV_subtyping_results_test_20250311/test_updated.fasta -g /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/reference_tree.tree -pre /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/rHEV_subtyping_results_test_20250311/test_updated.fasta_pp -m GTR+F+G4
+Seed:    2803 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Tue Mar 11 11:24:38 2025
+Kernel:  AVX+FMA - 1 threads (24 CPU cores detected)
+
+HINT: Use -nt option to specify number of threads because your CPU has 24 cores!
+HINT: -nt AUTO will automatically determine the best number of threads to use.
+
+Reading alignment file /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/rHEV_subtyping_results_test_20250311/test_updated.fasta ... Fasta format detected
+Reading fasta file: done in 0.00182644 secs using 99.76% CPU
+Alignment most likely contains DNA/RNA sequences
+WARNING: 3 sites contain only gaps or ambiguous characters.
+Alignment has 55 sequences with 6912 columns, 3167 distinct patterns
+2847 parsimony-informative, 364 singleton sites, 3701 constant sites
+             Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 0.000169527 secs
+   1  PQ488551       1.72%    passed     71.33%
+   2  PQ488552       1.46%    passed     73.60%
+   3  PQ488553       1.35%    passed     70.89%
+   4  PQ488555       2.86%    passed     58.98%
+   5  PQ488556       1.35%    passed     79.94%
+   6  PQ488558       1.43%    passed     61.86%
+   7  PQ488559       1.20%    passed     73.23%
+   8  PQ488560       1.35%    passed     75.88%
+   9  AB847305.1     0.80%    passed     99.45%
+  10  AB847306.1     0.84%    passed     30.17%
+  11  AB847307.1     1.35%    passed     93.88%
+  12  AB847308.1     1.13%    passed     93.10%
+  13  AB847309.1     1.01%    passed     35.36%
+  14  GU345043.1     1.04%    passed     88.98%
+  15  JN167537.1     1.14%    passed     48.20%
+  16  JN167538.1     1.13%    passed     74.81%
+  17  JX120573.1     1.35%    passed     77.77%
+  18  KM516906.1     1.13%    passed     73.19%
+  19  LC145325.1     0.97%    passed     98.73%
+  20  LC225388.1     0.81%    passed     93.46%
+  21  LC225389.1     0.78%    passed     90.75%
+  22  LC549184.1     0.74%    passed     97.26%
+  23  LC549185.1     1.36%    passed     96.30%
+  24  LC549186.1     0.87%    passed     89.48%
+  25  LC549187.1     0.87%    passed     87.80%
+  26  LC573546.1     0.58%    passed     96.73%
+  27  MG600417.1     0.87%    passed     96.16%
+  28  MG813927.1     1.30%    passed     83.20%
+  29  MH729811.1     2.21%    passed     53.83%
+  30  MH729812.1     2.08%    passed     84.09%
+  31  MK050105.1     1.04%    passed     67.53%
+  32  MN450851.1     1.30%    passed     80.60%
+  33  MN450852.1     1.35%    passed     79.80%
+  34  MN450853.1     0.71%    passed     95.59%
+  35  MN450854.1     1.35%    passed     70.53%
+  36  MN450855.1     1.30%    passed     85.43%
+  37  MT210621.1     1.36%    passed     97.70%
+  38  MW795566.1     1.19%    passed     17.74%
+  39  MW795567.1     1.17%    passed     21.67%
+  40  MZ357113.1     1.04%    passed     41.02%
+  41  MZ542728.1     0.69%    passed     95.67%
+  42  MZ868954.1     0.69%    passed     93.27%
+  43  NC_038504.1    1.04%    passed     75.91%
+  44  OM037395.1     4.51%    passed     66.92%
+  45  OM037396.1     4.48%    passed     68.25%
+  46  ON644869.1     2.08%    passed     85.90%
+  47  ON887282.1     2.69%    passed     16.65%
+  48  ON887283.1     2.69%    passed     96.15%
+  49  OP947206.1     1.13%    passed     89.37%
+  50  OP947207.1     1.13%    passed     96.25%
+  51  OP947209.1     1.13%    passed     99.11%
+  52  OP947210.1     4.08%    passed     90.18%
+  53  OP947211.1     0.78%    passed     94.19%
+  54  OQ067397.1     0.65%    passed     91.15%
+  55  test          70.28%    passed     19.74%
+WARNING: 1 sequences contain more than 50% gaps/ambiguity
+****  TOTAL          2.67%  0 sequences failed composition chi2 test (p-value<5%; df=3)
+Reading constraint tree /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/reference_tree.tree...
+Creating fast initial parsimony tree by random order stepwise addition...
+0.002 seconds, parsimony score: 22409 (based on 3211 sites)
+
+NOTE: 22 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -111311.424
+2. Current log-likelihood: -95696.053
+3. Current log-likelihood: -95223.703
+4. Current log-likelihood: -95202.833
+5. Current log-likelihood: -95201.452
+6. Current log-likelihood: -95201.282
+Optimal log-likelihood: -95201.251
+Rate parameters:  A-C: 1.92001  A-G: 13.19658  A-T: 2.57241  C-G: 0.93207  C-T: 22.67956  G-T: 1.00000
+Base frequencies:  A: 0.192  C: 0.285  G: 0.290  T: 0.233
+Gamma shape alpha: 0.207
+Parameters optimization took 6 rounds (1.276 sec)
+Wrote distance file to... 
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 99 parsimony trees... 0.320 second
+Computing log-likelihood of 8 initial trees ... 0.123 seconds
+Current best score: -95201.251
+
+Do NNI search on 9 best initial trees
+Finish initializing candidate tree set (10)
+Current best tree score: -95201.251 / CPU time: 0.608
+Number of iterations: 9
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Iteration 10 / LogL: -95207.804 / Time: 0h:0m:1s
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+Iteration 20 / LogL: -95202.005 / Time: 0h:0m:2s
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+Iteration 30 / LogL: -95201.250 / Time: 0h:0m:2s (0h:0m:5s left)
+Iteration 40 / LogL: -95201.818 / Time: 0h:0m:2s (0h:0m:3s left)
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+Iteration 50 / LogL: -95201.250 / Time: 0h:0m:2s (0h:0m:2s left)
+Iteration 60 / LogL: -95203.030 / Time: 0h:0m:2s (0h:0m:1s left)
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+Iteration 70 / LogL: -95201.250 / Time: 0h:0m:2s (0h:0m:1s left)
+Iteration 80 / LogL: -95201.250 / Time: 0h:0m:2s (0h:0m:0s left)
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+UPDATE BEST LOG-LIKELIHOOD: -95201.250
+Iteration 90 / LogL: -95201.250 / Time: 0h:0m:2s (0h:0m:0s left)
+Iteration 100 / LogL: -95201.250 / Time: 0h:0m:3s (0h:0m:0s left)
+TREE SEARCH COMPLETED AFTER 101 ITERATIONS / Time: 0h:0m:3s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -95201.250
+Optimal log-likelihood: -95201.248
+Rate parameters:  A-C: 1.91515  A-G: 13.19949  A-T: 2.56819  C-G: 0.93270  C-T: 22.68262  G-T: 1.00000
+Base frequencies:  A: 0.192  C: 0.285  G: 0.290  T: 0.233
+Gamma shape alpha: 0.207
+Parameters optimization took 1 rounds (0.069 sec)
+BEST SCORE FOUND : -95201.248
+Total tree length: 4.888
+
+Total number of iterations: 101
+CPU time used for tree search: 1.789 sec (0h:0m:1s)
+Wall-clock time used for tree search: 1.825 sec (0h:0m:1s)
+Total CPU time used: 3.131 sec (0h:0m:3s)
+Total wall-clock time used: 3.178 sec (0h:0m:3s)
+
+Analysis results written to: 
+  IQ-TREE report:                /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/rHEV_subtyping_results_test_20250311/test_updated.fasta_pp.iqtree
+  Maximum-likelihood tree:       /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/rHEV_subtyping_results_test_20250311/test_updated.fasta_pp.treefile
+  Screen log file:               /home/user/Documents/stan/rocahepevirus/rHEV_subtyping_tool_webapp/rHEV_subtyping_results_test_20250311/test_updated.fasta_pp.log
+
+Date and Time: Tue Mar 11 11:24:41 2025
