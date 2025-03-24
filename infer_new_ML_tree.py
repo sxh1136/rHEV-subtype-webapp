@@ -3,43 +3,7 @@ import sys
 import json
 import os
 import streamlit as st
-
-def add_sequence_to_msa(existing_alignment, new_sequence, output_alignment):
-    # Construct the MAFFT command as a string
-    mafft_command = f"mafft-linux64/mafft.bat --thread -1 --quiet --add {new_sequence} --keeplength {existing_alignment}"
-
-    with open(output_alignment, 'w') as output_file:
-        try:
-            # Run the MAFFT command with shell=True
-            result = subprocess.run(mafft_command, check=True, stdout=output_file, stderr=subprocess.PIPE, text=True, shell=True)
-
-            if result.returncode != 0:
-                error_output = result.stderr.strip()
-                print(f"MAFFT Error: MAFFT failed with return code {result.returncode}", file=sys.stderr)
-                print(f"MAFFT Error (stderr):\n{error_output}", file=sys.stderr)
-                return {"error": f"MAFFT failed with return code {result.returncode}: {error_output}"}
-
-        except subprocess.CalledProcessError as e:
-            print(f"MAFFT Error (CalledProcessError): {e}", file=sys.stderr)
-            return {"error": f"MAFFT Error (CalledProcessError): {e}"}
-        except FileNotFoundError as e:
-            print(f"MAFFT Error (FileNotFoundError): {e}", file=sys.stderr)
-            return {"error": f"MAFFT Error (FileNotFoundError): {e}"}
-
-    # Check that the output_alignment was created:
-    if not os.path.exists(output_alignment):
-        print(f"ERROR: add_sequence_to_msa: Output alignment file was not created: {output_alignment}", file=sys.stderr)
-        return {"error": f"add_sequence_to_msa: Output alignment file was not created: {output_alignment}"}
-
-    return None
-
-def log_file_contents(file_path):
-    if os.path.exists(file_path):
-        with open(file_path) as f:
-            st.write(f"Contents of {file_path}:\n", f.readlines()[:5])  # Log the first few lines
-    else:
-        st.error(f"File not found: {file_path}")
-
+from Bio import SeqIO
 
 def run_phylogenetic_placement(output_alignment, existing_tree):
     # Construct the IQ-TREE command as a string
@@ -91,22 +55,8 @@ def main(existing_alignment, new_sequence, existing_tree, output_alignment, outp
         print(f"ERROR: Existing tree file not found: {existing_tree}", file=sys.stderr)
         sys.exit(1)
 
-    # Add new sequence to existing alignment
-    error = add_sequence_to_msa(existing_alignment, new_sequence, output_alignment)
-    if error:
-        error_file_path = os.path.join(output_dir, "ml_tree_error.json")
-        with open(error_file_path, "w") as file:
-            json.dump(error, file)
-        print(f"Error during mafft: {error}", file=sys.stderr)
-        sys.exit(1)
-
-    # Call this function for the necessary files
-    log_file_contents(existing_alignment)
-    log_file_contents(output_alignment)  # Check the output alignment file
-    log_file_contents(existing_tree)
-
     # Run IQ-TREE phylogenetic placement first
-    error = run_phylogenetic_placement(output_alignment, existing_tree)
+    error = run_phylogenetic_placement(existing_alignment, existing_tree) #no longer using the output alignment, but rather the existing_alignment which has already been aligned
     if error:
         error_file_path = os.path.join(output_dir, "ml_tree_error.json")
         with open(error_file_path, "w") as file:
@@ -115,7 +65,7 @@ def main(existing_alignment, new_sequence, existing_tree, output_alignment, outp
         sys.exit(1)
 
     # Run IQ-TREE with the constraint tree for optimization
-    error = infer_global_optimization_tree(output_alignment, output_tree)
+    error = infer_global_optimization_tree(existing_alignment, output_tree) #passing in the existing alignment file path
     if error:
         error_file_path = os.path.join(output_dir, "ml_tree_error.json")
         with open(error_file_path, "w") as file:
@@ -125,7 +75,7 @@ def main(existing_alignment, new_sequence, existing_tree, output_alignment, outp
 
     # Prepare output dictionary
     output = {
-        "output_alignment": output_alignment,
+        "output_alignment": existing_alignment,
         "output_tree": output_tree + ".treefile"
     }
 

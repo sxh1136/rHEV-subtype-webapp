@@ -22,37 +22,40 @@ def extract_fasta_header(input_fasta):
         log_error(f"Error extracting FASTA header: {e}")
         return None
 
-def calculate_p_distance(input_fasta, reference_fasta, output_dir):
+def calculate_p_distance(input_fasta, existing_alignment, output_dir):
     try:
-        command = [sys.executable, "p-distance-calc.py", input_fasta, reference_fasta, output_dir]
+        command = [sys.executable, "p-distance-calc.py", input_fasta, existing_alignment, output_dir]
         result = subprocess.run(command, check=True, capture_output=True, text=True)
 
         if result.returncode != 0:
             log_error(f"Error calculating p-distance. Return code: {result.returncode}")
             log_error(f"Standard Error:\n{result.stderr}")
-            return None
+            return None, None  # Return None for both p-distance and alignment path
 
         try:
             with open(os.path.join(output_dir, "p_distance_output.json"), "r") as file:
-                result = json.load(file)
-            return result
+                p_distance_result = json.load(file) #this should be renamed so its not confused with subprocess' result
+            
+            alignment_path = os.path.join(output_dir, "updated_alignment.fasta")  # Assuming this is the alignment file name
+            return p_distance_result, alignment_path
+        
         except FileNotFoundError:
             log_error(f"Error: p_distance_output.json not found in {output_dir} directory.")
-            return None
+            return None, None
         except json.JSONDecodeError:
             log_error("Error: Could not decode JSON from p_distance_output.json")
-            return None
+            return None, None
 
     except subprocess.CalledProcessError as e:
         log_error(f"Subprocess error: {e}")
-        return None
+        return None, None
     
-def infer_new_tree(existing_alignment, new_sequence, query_id, existing_tree, output_dir):
+def infer_new_tree(alignment_file, new_sequence, query_id, existing_tree, output_dir): #Modified to take alignment_file
     output_alignment = os.path.join(output_dir, f"{query_id}_updated.fasta")
     output_tree = os.path.join(output_dir, f"{query_id}_reoptimised")
     script_path = "infer_new_ML_tree.py"
 
-    command = [sys.executable, script_path, existing_alignment, new_sequence, existing_tree, output_alignment, output_tree, output_dir]
+    command = [sys.executable, script_path, alignment_file, new_sequence, existing_tree, output_alignment, output_tree, output_dir] #using alignment_file
 
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
@@ -111,7 +114,6 @@ def main():
     st.title("Rat Hepatitis E Subtyping Tool v1.0")
     st.header("Sridhar Group")
     
-    reference_fasta = "reference_genomes.fa"
     existing_alignment = "reference_alignment.fa"
     existing_tree = "reference_tree.tree"
     csv_file = "reference_subtypes.csv"
@@ -123,9 +125,7 @@ def main():
         fasta_string = None  # Initialize to None
     else:
         fasta_string = st.text_area("Paste FASTA sequence", height=200)
-        input_fasta = None  # Initialize to None
-
-    # Add a button to start the analysis
+        input_fasta = None  # Initialize to None... # Add a button to start the analysis
     start_analysis = st.button("Start Analysis")
 
     if start_analysis:
@@ -175,10 +175,10 @@ def main():
         progress_bar = st.progress(0)
         status_placeholder = st.empty()
         status_placeholder.write("\nCalculating p-distance...")
-        for i in range(40):
+        for i in range(20):
             progress_bar.progress(i / 100)
             time.sleep(0.3)
-        p_distance_output = calculate_p_distance(temp_fasta_path, reference_fasta, output_dir)
+        p_distance_output, alignment_file = calculate_p_distance(temp_fasta_path, existing_alignment, output_dir) # Get the alignment file path
         if p_distance_output:
             st.success("P-distance calculation completed.")
         else:
@@ -186,11 +186,11 @@ def main():
             return
         
         status_placeholder.write("\nInferring new ML tree...")
-        for i in range(59):
-            progress_value = 0.4 + (i / 59) * 0.59
+        for i in range(79):
+            progress_value = 0.2 + (i / 79) * 0.79
             progress_bar.progress(progress_value)
             time.sleep(0.3)
-        tree_output, output_alignment, output_tree = infer_new_tree(existing_alignment, temp_fasta_path, query_id, existing_tree, output_dir)
+        tree_output, output_alignment, output_tree = infer_new_tree(alignment_file, temp_fasta_path, query_id, existing_tree, output_dir) #pass alignment file
         if tree_output:
             st.success("New ML tree inference completed.")
         else:
@@ -220,8 +220,6 @@ def main():
                 subtype_result = json.load(file)
 
             st.write("\n**Results Summary**")
-
-            # Prepare data for the table, making metrics the column titles
             table_data = {
                 "Closest Reference by P-Distance (value)": [
                     f"{p_distance_result['closest_reference']} ({p_distance_result['p_distance']:.4f})"
@@ -237,10 +235,7 @@ def main():
                 ]
             }
         
-            # Create a Pandas DataFrame
             df = pd.DataFrame(table_data)
-
-            # Display the table using Streamlit
             st.table(df)
             st.write("**Note**: clade and subtype assignments are only determined if ML patristic distance is below cutoff values.")
             
@@ -278,6 +273,8 @@ def main():
         with open(zip_filename, "rb") as file:
             zip_data = file.read()
 
+        st.balloons()
+        
         @st.fragment
         def download_fragment():
             st.download_button("Download Output", zip_data, file_name=zip_filename)
@@ -285,6 +282,6 @@ def main():
         download_fragment()
         
 
-        st.balloons()
+        
 if __name__ == "__main__":
     main()

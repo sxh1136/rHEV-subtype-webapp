@@ -35,15 +35,16 @@ def main(input_newick, predefined_label, csv_file, output_dir):
                     print(f"Distance from {taxon1.label} to {taxon2.label}: {distance}")
 
 
-        # Find the predefined taxon
+        # Find the input sequence taxon.  We are searching by the *modified* id
+        modified_predefined_label = f"QUERY_{predefined_label}" #creating modified label
         predefined_taxon = None
         for taxon in tree.taxon_namespace:
-            if taxon.label == predefined_label:
+            if taxon.label == modified_predefined_label:
                 predefined_taxon = taxon
                 break
 
         if predefined_taxon is None:
-            print(f"Error: Taxon '{predefined_label}' not found in the tree.")
+            print(f"Error: Taxon '{modified_predefined_label}' not found in the tree.  Check that the first script executed successfully")
             return
 
         # List to store distances and corresponding taxa
@@ -85,17 +86,19 @@ def main(input_newick, predefined_label, csv_file, output_dir):
         # Determine clade and subtype of the closest reference
         clade_assignment = "Not-determined"
         subtype_assignment = "Not-determined"
-        if closest_label in csv_data:
+        #The closest label already uses the modified label as well
+        closest_label_stripped = closest_label.replace("QUERY_", "") #stripping the label
+        if closest_label_stripped in csv_data:
             if closest_distance <= clade_threshold:
-                clade_assignment = csv_data[closest_label]['Clade']
+                clade_assignment = csv_data[closest_label_stripped]['Clade']
             if closest_distance <= subtype_threshold:
-                subtype_assignment = csv_data[closest_label]['Subtype']
+                subtype_assignment = csv_data[closest_label_stripped]['Subtype']
 
         print("Subtype and clade assignments determined.")
 
         # Prepare output dictionary
         output = {
-            "closest_reference_ml": closest_label,
+            "closest_reference_ml": closest_label, #still outputting the modified label here
             "ml_distance": closest_distance,
             "below_cutoff": closest_distance < subtype_threshold,
             "clade_assignment": clade_assignment,
@@ -108,7 +111,7 @@ def main(input_newick, predefined_label, csv_file, output_dir):
         # Write the output to a file in the specified directory
         output_file = os.path.join(output_dir, "subtype_output.json")
         with open(output_file, "w") as file:
-            json.dump(output, file)
+            json.dump(output, file, indent = 4)
 
         print(f"Output written to {output_file}.")
 
