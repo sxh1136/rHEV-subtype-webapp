@@ -1,4 +1,4 @@
 r-base
 r-base-dev
-ape
-phangorn
+r-cran-ape
+r-cran-phangorn
