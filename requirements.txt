@@ -3,3 +3,4 @@ biopython==1.85
 DendroPy==5.0.1
 streamlit==1.42.2
 rpy2
+numpy
