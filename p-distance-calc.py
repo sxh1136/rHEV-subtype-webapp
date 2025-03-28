@@ -3,9 +3,32 @@ import json
 import os
 import tempfile
 from Bio import SeqIO
-from Bio.Phylo.TreeConstruction import DistanceCalculator
-from Bio.Align import MultipleSeqAlignment
 import subprocess
+import numpy as np
+from rpy2 import robjects
+
+def calculate_k80_distance(fasta_file):
+    # R code as a string
+    r_code = """
+    library(ape)
+    library(phangorn)
+
+    calculate_k80_distance <- function(fasta_file) {
+        sequences <- read.dna(fasta_file, format = "fasta")
+        d <- dist.dna(sequences, model = "K80", gamma = 4, pairwise.deletion = FALSE,
+         base.freq = NULL)
+        return(as.matrix(d))
+    }
+    """
+    
+    # Load R code
+    robjects.r(r_code)
+    # Call the R function
+    k80_distance_func = robjects.globalenv['calculate_k80_distance']
+    distance_matrix = k80_distance_func(fasta_file)
+    
+    # Convert R matrix to a NumPy array
+    return np.array(distance_matrix)
 
 def main(input_fasta, existing_msa, output_dir):
     try:
@@ -18,7 +41,6 @@ def main(input_fasta, existing_msa, output_dir):
         input_seq.name = input_seq.id
         input_seq.description = input_seq.id
         new_input_id = input_seq.id
-
 
         # Save input sequence to a temporary file
         with tempfile.NamedTemporaryFile(mode='w+t', suffix=".fasta", delete=False) as temp_file:
@@ -34,30 +56,35 @@ def main(input_fasta, existing_msa, output_dir):
             # Read the combined alignment
             aligned_sequences = list(SeqIO.parse(combined_alignment_file, "fasta"))
         
-        # Create MultipleSeqAlignment object
-        alignment = MultipleSeqAlignment(aligned_sequences)
-        
-        # Calculate distance matrix 
-        calculator = DistanceCalculator("identity")
-        distance_matrix = calculator.get_distance(alignment)
-        
-        # Extract distances for input sequence
-        p_distances = {}
+            # Create a temporary file for the combined alignment to pass to R
+            temp_alignment_file = os.path.join(tmp_dir, "alignment.fasta")
+            SeqIO.write(aligned_sequences, temp_alignment_file, "fasta")
 
-        for seq in aligned_sequences:
-            if seq.id != new_input_id:
-                ref_id = seq.id
-                distance = distance_matrix[new_input_id, ref_id]
-                p_distances[ref_id] = distance
-        
+            # Calculate distance matrix using R function
+            distance_matrix = calculate_k80_distance(temp_alignment_file)
+
+        # Create a mapping of sequence IDs to their indices
+        seq_ids = [seq.id for seq in aligned_sequences]
+        id_to_index = {seq_id: idx for idx, seq_id in enumerate(seq_ids)}
+
+        # Create a dictionary to store distances
+        p_distances = {}
+        for ref_seq in aligned_sequences:
+            if ref_seq.id != new_input_id:
+                # Get indices for the new input ID and reference ID
+                new_index = id_to_index[new_input_id]
+                ref_index = id_to_index[ref_seq.id]
+                distance = distance_matrix[new_index, ref_index]
+                p_distances[ref_seq.id] = distance
+
         # Find closest reference
         min_id, min_distance = min(p_distances.items(), key=lambda x: x[1])
         
         # Prepare output
         output = {
             "closest_reference": min_id,
-            "p_distance": min_distance,
-            "below_cutoff": min_distance <= 0.1833,
+            "p_distance": float(min_distance),  # Convert to native float
+            "below_cutoff": bool(min_distance <= 0.1833),  # Convert to native bool
             "original_input_id": original_id  # Include the original ID in the output
         }
 
@@ -66,7 +93,7 @@ def main(input_fasta, existing_msa, output_dir):
 
         # Write JSON output
         with open(os.path.join(output_dir, "p_distance_output.json"), "w") as f:
-            json.dump(output, f, indent=4) #added indent for readability
+            json.dump(output, f, indent=4)  # added indent for readability
             
         # Write distances file
         with open(os.path.join(output_dir, "p_distances.txt"), "w") as f:
@@ -76,11 +103,10 @@ def main(input_fasta, existing_msa, output_dir):
         # Save the combined alignment to a file
         output_alignment_path = os.path.join(output_dir, "updated_alignment.fasta")
         with open(output_alignment_path, "w") as f:
-            SeqIO.write(alignment, output_alignment_path, "fasta")
+            SeqIO.write(aligned_sequences, output_alignment_path, "fasta")
         
-        return output_alignment_path #returning path
+        return output_alignment_path  # returning path
     
-
     except subprocess.CalledProcessError as e:
         sys.stderr.write(f"Error running MUSCLE: {e.stderr}\n")
         sys.exit(1)
