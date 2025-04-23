@@ -84,7 +84,7 @@ def main(input_fasta, existing_msa, output_dir):
         output = {
             "closest_reference": min_id,
             "p_distance": float(min_distance),  # Convert to native float
-            "below_cutoff": bool(min_distance <= 0.1833),  # Convert to native bool
+            "below_cutoff": bool(min_distance <= 0.1769),  # Convert to native bool
             "original_input_id": original_id  # Include the original ID in the output
         }
 

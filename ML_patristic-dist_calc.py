@@ -68,8 +68,8 @@ def main(input_newick, predefined_label, csv_file, output_dir):
             print(f"{label}: {dist}")
 
         # ML nucleotide threshold
-        clade_threshold = 1.0227
-        subtype_threshold = 0.5586
+        clade_threshold = 1.006
+        subtype_threshold = 0.5568
 
         # Get the closest reference
         closest_distance, closest_label = distance_list[0]
