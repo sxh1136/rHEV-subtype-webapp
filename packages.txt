@@ -1,4 +1,4 @@
-r-base
+r-base=4.5.1
 r-base-dev
 r-cran-ape
 r-cran-phangorn
