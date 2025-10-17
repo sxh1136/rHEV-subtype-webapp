@@ -19,7 +19,10 @@ def calculate_k80_distance(fasta_file):
     distance_matrix = calculator.get_distance(alignment)
 
     # Convert the distance matrix to a NumPy array
-    return distance_matrix
+    # Ensure it is a square matrix and return as a 2D array
+    distance_array = np.array(distance_matrix)
+
+    return distance_array
 
 def main(input_fasta, existing_msa, output_dir):
     try:
