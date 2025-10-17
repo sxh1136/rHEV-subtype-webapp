@@ -2,6 +2,7 @@ import sys
 import json
 import os
 import tempfile
+from Bio import SeqIO
 from Bio import AlignIO
 from Bio.Phylo.TreeConstruction import DistanceCalculator
 import subprocess
