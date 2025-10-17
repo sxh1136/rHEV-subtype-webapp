@@ -2,33 +2,23 @@ import sys
 import json
 import os
 import tempfile
-from Bio import SeqIO
+from Bio import AlignIO
+from Bio.Phylo.TreeConstruction import DistanceCalculator
 import subprocess
 import numpy as np
-from rpy2 import robjects
 
 def calculate_k80_distance(fasta_file):
-    # R code as a string
-    r_code = """
-    library(ape)
-    library(phangorn)
+    # Read the sequences from the FASTA file
+    alignment = AlignIO.read(fasta_file, "fasta")
 
-    calculate_k80_distance <- function(fasta_file) {
-        sequences <- read.dna(fasta_file, format = "fasta")
-        d <- dist.dna(sequences, model = "K80", gamma = 4, pairwise.deletion = FALSE,
-         base.freq = NULL)
-        return(as.matrix(d))
-    }
-    """
+    # Create a distance calculator using the K80 model
+    calculator = DistanceCalculator('k80')
     
-    # Load R code
-    robjects.r(r_code)
-    # Call the R function
-    k80_distance_func = robjects.globalenv['calculate_k80_distance']
-    distance_matrix = k80_distance_func(fasta_file)
-    
-    # Convert R matrix to a NumPy array
-    return np.array(distance_matrix)
+    # Calculate the distance matrix
+    distance_matrix = calculator.get_distance(alignment)
+
+    # Convert the distance matrix to a NumPy array
+    return distance_matrix
 
 def main(input_fasta, existing_msa, output_dir):
     try:
