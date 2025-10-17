@@ -1,6 +1,6 @@
-Bio==1.7.1
-biopython==1.85
-DendroPy==5.0.1
+Bio
+biopython
+DendroPy
 streamlit
 rpy2
 numpy
