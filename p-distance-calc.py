@@ -3,32 +3,54 @@ import json
 import os
 import tempfile
 from Bio import SeqIO
+from Bio import AlignIO
+from Bio.Phylo.TreeConstruction import DistanceCalculator
 import subprocess
 import numpy as np
-from rpy2 import robjects
+import math
+
 
 def calculate_k80_distance(fasta_file):
-    # R code as a string
-    r_code = """
-    library(ape)
-    library(phangorn)
+    # Read the aligned sequences
+    alignment = AlignIO.read(fasta_file, "fasta")
+    n = len(alignment)
+    
+    # Function to compute transitions and transversions between two sequences
+    def transitions_transversions(seq1, seq2):
+        transitions = 0
+        transversions = 0
+        transitions_pairs = {('A','G'), ('G','A'), ('C','T'), ('T','C')}
+        
+        length = 0  # count valid comparisons (ignore gaps etc)
+        for a, b in zip(seq1, seq2):
+            if a in {'A','C','G','T'} and b in {'A','C','G','T'}:
+                length += 1
+                if a != b:
+                    if (a,b) in transitions_pairs:
+                        transitions += 1
+                    else:
+                        transversions += 1
+        return transitions, transversions, length
 
-    calculate_k80_distance <- function(fasta_file) {
-        sequences <- read.dna(fasta_file, format = "fasta")
-        d <- dist.dna(sequences, model = "K80", gamma = 4, pairwise.deletion = FALSE,
-         base.freq = NULL)
-        return(as.matrix(d))
-    }
-    """
-    
-    # Load R code
-    robjects.r(r_code)
-    # Call the R function
-    k80_distance_func = robjects.globalenv['calculate_k80_distance']
-    distance_matrix = k80_distance_func(fasta_file)
-    
-    # Convert R matrix to a NumPy array
-    return np.array(distance_matrix)
+    # Calculate distance matrix
+    dist_matrix = np.zeros((n, n))
+    for i in range(n):
+        for j in range(i+1, n):
+            ts, tv, length = transitions_transversions(alignment[i].seq, alignment[j].seq)
+            if length == 0:
+                dist = 0
+            else:
+                P = ts / length
+                Q = tv / length
+                # Kimura 2-parameter distance formula
+                try:
+                    dist = -0.5 * math.log(1 - 2*P - Q) - 0.25 * math.log(1 - 2*Q)
+                except ValueError:
+                    # if log argument <= 0 due to saturation, set distance to large number
+                    dist = float('inf')
+            dist_matrix[i, j] = dist
+            dist_matrix[j, i] = dist
+    return dist_matrix
 
 def main(input_fasta, existing_msa, output_dir):
     try:
