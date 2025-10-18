@@ -111,7 +111,7 @@ def infer_subtype(input_newick, predefined_label, csv_file, output_dir):
 
 def main():
     st.image("header.jpg")
-    st.title("Rat Hepatitis E Subtyping Tool v1.0")
+    st.title("Rat Hepatitis E Subtyping Tool v1.1")
     st.header("Sridhar Group")
     
     existing_alignment = "reference_alignment.fa"
