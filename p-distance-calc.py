@@ -7,22 +7,50 @@ from Bio import AlignIO
 from Bio.Phylo.TreeConstruction import DistanceCalculator
 import subprocess
 import numpy as np
+import math
+
 
 def calculate_k80_distance(fasta_file):
-    # Read the sequences from the FASTA file
+    # Read the aligned sequences
     alignment = AlignIO.read(fasta_file, "fasta")
-
-    # Create a distance calculator using the K80 model
-    calculator = DistanceCalculator('k80')
+    n = len(alignment)
     
-    # Calculate the distance matrix
-    distance_matrix = calculator.get_distance(alignment)
+    # Function to compute transitions and transversions between two sequences
+    def transitions_transversions(seq1, seq2):
+        transitions = 0
+        transversions = 0
+        transitions_pairs = {('A','G'), ('G','A'), ('C','T'), ('T','C')}
+        
+        length = 0  # count valid comparisons (ignore gaps etc)
+        for a, b in zip(seq1, seq2):
+            if a in {'A','C','G','T'} and b in {'A','C','G','T'}:
+                length += 1
+                if a != b:
+                    if (a,b) in transitions_pairs:
+                        transitions += 1
+                    else:
+                        transversions += 1
+        return transitions, transversions, length
 
-    # Convert the distance matrix to a NumPy array
-    # Ensure it is a square matrix and return as a 2D array
-    distance_array = np.array(distance_matrix)
-
-    return distance_array
+    # Calculate distance matrix
+    dist_matrix = np.zeros((n, n))
+    for i in range(n):
+        for j in range(i+1, n):
+            ts, tv, length = transitions_transversions(alignment[i].seq, alignment[j].seq)
+            if length == 0:
+                dist = 0
+            else:
+                P = ts / length
+                Q = tv / length
+                # Kimura 2-parameter distance formula
+                try:
+                    dist = -0.5 * math.log(1 - 2*P - Q) - 0.25 * math.log(1 - 2*Q)
+                except ValueError:
+                    # if log argument <= 0 due to saturation, set distance to large number
+                    dist = float('inf')
+            dist_matrix[i, j] = dist
+            dist_matrix[j, i] = dist
+    return dist_matrix
 
 def main(input_fasta, existing_msa, output_dir):
     try:
